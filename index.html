@@ -339,7 +339,7 @@ async function addToAirtable(c){
     'Role':c.p,
     'Motion':'Leverage',
     'Status':'Not Contacted',
-    'Notes':`Company: ${c.co} | LinkedIn: ${c.u}`
+    'Notes':`Company: ${c.co}`
   };
   try{
     const res=await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{
