@@ -335,11 +335,11 @@ async function addToAirtable(c){
   const motion=c.sc===5?'Leverage':'Grow';
   const warmth=c.sc>=3?'Warm':'Cold';
   const fields = {
+    'Name':c.n,
     'Role':c.p,
-    'Motion':motion,
-    'Warmth':warmth,
-    'Status':'Sent',
-    'Notes':`${c.n} | Company: ${c.co} | LinkedIn: ${c.u} | Added via GTM OS app`
+    'Motion':'Leverage',
+    'Status':'Not Contacted',
+    'Notes':`Company: ${c.co} | LinkedIn: ${c.u}`
   };
   try{
     const res=await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{
