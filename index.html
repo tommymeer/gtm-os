@@ -334,16 +334,13 @@ async function addToAirtable(c){
   const fmt=d=>d.toISOString().split('T')[0];
   const motion=c.sc===5?'Leverage':'Grow';
   const warmth=c.sc>=3?'Warm':'Cold';
-  const fields={
+  const fields = {
     'Name':c.n,
     'Role':c.p,
     'Motion':motion,
     'Warmth':warmth,
-    'Last Touched':fmt(today),
     'Status':'Sent',
-    'Next Action':'Follow up',
-    'Next Action Date':fmt(plusSeven),
-    'Notes':`Company: ${c.co}\nLinkedIn: ${c.u}\nAdded via GTM OS app`
+    'Notes':`Company: ${c.co} | LinkedIn: ${c.u} | Added via GTM OS app`
   };
   try{
     const res=await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{
@@ -357,7 +354,7 @@ async function addToAirtable(c){
       actRender();
     } else {
       const err=await res.json();
-      toast(`Error: ${err.error?.message||'unknown error'}`);
+      toast(`Error: ${JSON.stringify(err)}`);
     }
   } catch(e){
     toast('Network error — check connection');
