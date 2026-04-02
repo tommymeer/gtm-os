@@ -530,6 +530,7 @@ document.getElementById('li-upload').addEventListener('change',async e=>{
             method:'POST',
             headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
             body:JSON.stringify({fields:{
+              'Name':c.name,
               'Role':c.position,
               'Motion':'Leverage',
               'Warmth':'Cold',
