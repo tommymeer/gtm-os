@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f9f8f6;color:#1a1a1a;min-height:100vh}
-.app{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+.app{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
 .tabs{display:flex;gap:0;margin-bottom:2rem;border-bottom:1px solid #e5e5e5}
 .tab{padding:10px 20px;font-size:14px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab.active{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:500}
@@ -16,13 +16,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .panel{display:none}.panel.active{display:block}
 h2{font-size:18px;font-weight:500;margin-bottom:4px}
 .subtitle{font-size:13px;color:#888;margin-bottom:1.5rem}
-.upload-zone{border:1.5px dashed #ddd;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;background:#fff}
-.upload-zone h3{font-size:13px;font-weight:500;color:#555;margin-bottom:10px}
-.upload-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.upload-btn{position:relative;overflow:hidden;padding:7px 14px;border-radius:7px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;color:#333}
-.upload-btn:hover{background:#f5f5f5}
-.upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.upload-status{font-size:12px;color:#22a06b;margin-top:8px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
 .stat{background:#fff;border-radius:8px;border:1px solid #eee;padding:12px 14px}
 .stat-label{font-size:11px;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
@@ -54,7 +47,7 @@ h2{font-size:18px;font-weight:500;margin-bottom:4px}
 .b-physical{background:#fef3c7;color:#92400e}
 .b-role{background:#f3f4f6;color:#374151}
 .b-top{background:#fce7f3;color:#9d174d}
-.b-added{background:#d1fae5;color:#065f46}
+.b-touched{background:#fef3c7;color:#92400e}
 .li-link{font-size:12px;color:#2563eb;text-decoration:none;white-space:nowrap}
 .li-link:hover{text-decoration:underline}
 .msg-box{background:#f9f8f6;border:1px solid #eee;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.65;margin:12px 0 10px;white-space:pre-wrap;color:#1a1a1a;min-height:80px}
@@ -64,105 +57,131 @@ h2{font-size:18px;font-weight:500;margin-bottom:4px}
 .btn.primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .btn.primary:hover{background:#333}
 .btn.success{background:#d1fae5;color:#065f46;border-color:#a7f3d0}
-.btn.danger{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
 .btn:disabled{opacity:.45;cursor:not-allowed}
-.sent-note{font-size:12px;color:#888;margin-top:8px;font-style:italic}
-.empty{padding:3rem;text-align:center;color:#aaa;font-size:14px}
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;max-width:300px}
 .toast.show{opacity:1}
-.search-input{flex:1;padding:6px 12px;border-radius:7px;border:1px solid #ddd;font-size:13px;background:#fff;min-width:160px}
-.search-input:focus{outline:none;border-color:#999}
+.upload-zone{border:1.5px dashed #ddd;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;background:#fff}
+.upload-zone h3{font-size:13px;font-weight:500;color:#555;margin-bottom:10px}
+.upload-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.upload-btn{position:relative;overflow:hidden;padding:7px 14px;border-radius:7px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;color:#333}
+.upload-btn:hover{background:#f5f5f5}
+.upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-status{font-size:12px;color:#22a06b;margin-top:8px;width:100%}
+.loading{padding:3rem;text-align:center;color:#aaa;font-size:14px}
+.empty{padding:3rem;text-align:center;color:#aaa;font-size:14px}
+.progress-bar{width:100%;height:4px;background:#eee;border-radius:2px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;background:#1a1a1a;border-radius:2px;transition:width .3s}
+.upsert-results{margin-top:1rem}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border:1px solid #eee;border-radius:8px;margin-bottom:6px;font-size:13px}
+.result-new{border-left:3px solid #22a06b}
+.result-update{border-left:3px solid #2563eb}
+.result-skip{border-left:3px solid #ddd;opacity:.5}
+.tag{font-size:11px;padding:2px 8px;border-radius:99px}
+.tag-new{background:#d1fae5;color:#065f46}
+.tag-update{background:#dbeafe;color:#1d4ed8}
+.tag-skip{background:#f3f4f6;color:#888}
 table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #eee}
-th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;font-weight:500;border-bottom:1px solid #eee;cursor:pointer;white-space:nowrap}
+th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#888;font-weight:500;border-bottom:1px solid #eee;white-space:nowrap;cursor:pointer}
 th:hover{color:#333}
 td{padding:10px 12px;border-bottom:.5px solid #f0f0f0;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .td-name{font-weight:500}
-.td-company{color:#555}
-.td-pos{color:#888;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.td-link a{color:#2563eb;font-size:12px;text-decoration:none}
-.td-link a:hover{text-decoration:underline}
+.td-pos{color:#888;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;white-space:nowrap}
 .p-consumer{background:#dbeafe;color:#1d4ed8}
 .p-platform{background:#d1fae5;color:#065f46}
 .p-physical{background:#fef3c7;color:#92400e}
 .p-none{background:#f3f4f6;color:#666}
-.p-in{background:#d1fae5;color:#065f46}
-.p-out{background:#f3f4f6;color:#666}
-.pagination{display:flex;gap:8px;align-items:center;margin-top:1rem;justify-content:center}
+.p-other{background:#f3f4f6;color:#555}
+.p-notcontacted{background:#f3f4f6;color:#666}
+.p-sent{background:#dbeafe;color:#1d4ed8}
+.p-replied{background:#d1fae5;color:#065f46}
+.p-meeting{background:#fef3c7;color:#92400e}
+.p-interview{background:#fce7f3;color:#9d174d}
+.p-closed{background:#f3f4f6;color:#999}
+.pagination{display:flex;gap:8px;align-items:center;margin-top:1rem;justify-content:center;flex-wrap:wrap}
 .page-btn{padding:5px 12px;border-radius:7px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer}
 .page-btn:hover{background:#f5f5f5}
 .page-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .page-info{font-size:13px;color:#888}
+.search-input{flex:1;min-width:160px;padding:6px 12px;border-radius:7px;border:1px solid #ddd;font-size:13px;background:#fff}
+.search-input:focus{outline:none;border-color:#999}
 @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('activator',this)">Network activator</button>
-    <button class="tab" onclick="switchTab('explorer',this)">Network explorer</button>
+    <button class="tab active" onclick="switchTab('activator',this)">Activator</button>
+    <button class="tab" onclick="switchTab('upsert',this)">Sync network</button>
+    <button class="tab" onclick="switchTab('explorer',this)">Explorer</button>
   </div>
 
   <!-- TAB 1: ACTIVATOR -->
   <div class="panel active" id="tab-activator">
     <h2>Network activator</h2>
-    <p class="subtitle">Scored connections not yet in your GTM OS — 5 leverage touches per day</p>
-
-    <div class="upload-zone">
-      <h3>Refresh data</h3>
-      <div class="upload-row">
-        <label class="upload-btn">Upload LinkedIn CSV<input type="file" accept=".csv" id="li-upload"></label>
-        <label class="upload-btn">Upload Airtable People CSV<input type="file" accept=".csv" id="at-upload"></label>
-        <div id="upload-status" class="upload-status"></div>
-      </div>
+    <p class="subtitle">Top-priority contacts from your GTM OS — 5 leverage touches per day</p>
+    <div class="stats" id="act-stats">
+      <div class="stat"><div class="stat-label">Loaded</div><div class="stat-value" id="act-total">—</div></div>
+      <div class="stat"><div class="stat-label">Top matches</div><div class="stat-value" id="act-top">—</div></div>
+      <div class="stat"><div class="stat-label">Sent today</div><div class="stat-value" id="act-sent">0</div></div>
+      <div class="stat"><div class="stat-label">Marked done</div><div class="stat-value" id="act-done">0</div></div>
     </div>
-
-    <div class="stats" id="act-stats"></div>
-
     <div class="controls">
-      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
-      <button class="filter-btn" onclick="setFilter('top',this)">Top matches</button>
-      <button class="filter-btn" onclick="setFilter('consumer_tech',this)">Consumer tech</button>
-      <button class="filter-btn" onclick="setFilter('platform_infra',this)">Platform infra</button>
-      <button class="filter-btn" onclick="setFilter('physical_world',this)">Physical world</button>
-      <button class="filter-btn" onclick="setFilter('role_only',this)">Role only</button>
+      <button class="filter-btn active" onclick="setActFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setActFilter('Consumer Tech',this)">Consumer tech</button>
+      <button class="filter-btn" onclick="setActFilter('Platform Infra',this)">Platform infra</button>
+      <button class="filter-btn" onclick="setActFilter('Physical World',this)">Physical world</button>
+      <button class="filter-btn" onclick="setActFilter('Other',this)">Other</button>
       <div class="spacer"></div>
-      <button class="icon-btn" onclick="shuffleAll()">Shuffle</button>
+      <button class="icon-btn" onclick="loadActivator()">Refresh</button>
     </div>
-
-    <div class="queue-label" id="queue-label"></div>
-    <div class="contact-list" id="contact-list"></div>
+    <div class="queue-label" id="act-label"></div>
+    <div id="act-list"><div class="loading">Loading from Airtable...</div></div>
   </div>
 
-  <!-- TAB 2: EXPLORER -->
-  <div class="panel" id="tab-explorer">
-    <h2>Network explorer</h2>
-    <p class="subtitle">Your full LinkedIn network — upload CSV to explore</p>
-
+  <!-- TAB 2: UPSERT -->
+  <div class="panel" id="tab-upsert">
+    <h2>Sync network</h2>
+    <p class="subtitle">Upload your LinkedIn CSV to sync new connections into Airtable</p>
     <div class="upload-zone">
-      <h3>Load your network</h3>
+      <h3>Upload LinkedIn CSV</h3>
       <div class="upload-row">
-        <label class="upload-btn">Upload LinkedIn CSV<input type="file" accept=".csv" id="exp-li-upload"></label>
-        <label class="upload-btn">Upload Airtable People CSV<input type="file" accept=".csv" id="exp-at-upload"></label>
-        <div id="exp-upload-status" class="upload-status"></div>
+        <label class="upload-btn">Choose file<input type="file" accept=".csv" id="li-upload"></label>
+        <div id="upsert-status" class="upload-status"></div>
+      </div>
+      <div class="progress-bar" id="upsert-progress-bar" style="display:none">
+        <div class="progress-fill" id="upsert-progress-fill" style="width:0%"></div>
       </div>
     </div>
-
-    <div class="stats" id="exp-stats" style="display:none"></div>
-
-    <div class="controls" id="exp-controls" style="display:none">
-      <input class="search-input" type="text" id="exp-search" placeholder="Search name, company, role..." oninput="expRender()">
-      <button class="filter-btn active" onclick="setExpFilter('all',this)">All</button>
-      <button class="filter-btn" onclick="setExpFilter('consumer_tech',this)">Consumer tech</button>
-      <button class="filter-btn" onclick="setExpFilter('platform_infra',this)">Platform infra</button>
-      <button class="filter-btn" onclick="setExpFilter('physical_world',this)">Physical world</button>
-      <button class="filter-btn" onclick="setExpFilter('in_system',this)">In GTM OS</button>
-      <button class="filter-btn" onclick="setExpFilter('not_in_system',this)">Not in GTM OS</button>
+    <div class="stats" id="upsert-stats" style="display:none">
+      <div class="stat"><div class="stat-label">In CSV</div><div class="stat-value" id="us-csv">0</div></div>
+      <div class="stat"><div class="stat-label">New</div><div class="stat-value" id="us-new">0</div></div>
+      <div class="stat"><div class="stat-label">Updated</div><div class="stat-value" id="us-updated">0</div></div>
+      <div class="stat"><div class="stat-label">Skipped</div><div class="stat-value" id="us-skipped">0</div></div>
     </div>
+    <div id="upsert-results"></div>
+  </div>
 
-    <div id="exp-table-wrap"></div>
+  <!-- TAB 3: EXPLORER -->
+  <div class="panel" id="tab-explorer">
+    <h2>Network explorer</h2>
+    <p class="subtitle">Your full GTM OS people database</p>
+    <div class="controls">
+      <input class="search-input" type="text" id="exp-search" placeholder="Search name, role, company..." oninput="expRender()">
+      <button class="filter-btn active" onclick="setExpFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setExpFilter('Consumer Tech',this)">Consumer tech</button>
+      <button class="filter-btn" onclick="setExpFilter('Platform Infra',this)">Platform infra</button>
+      <button class="filter-btn" onclick="setExpFilter('Physical World',this)">Physical world</button>
+      <button class="filter-btn" onclick="setExpFilter('Other',this)">Other</button>
+      <button class="filter-btn" onclick="setExpFilter('Not Contacted',this)">Not contacted</button>
+      <button class="filter-btn" onclick="setExpFilter('Replied',this)">Replied</button>
+      <div class="spacer"></div>
+      <button class="icon-btn" onclick="loadExplorer()">Refresh</button>
+    </div>
+    <div class="queue-label" id="exp-label"></div>
+    <div id="exp-table-wrap"><div class="loading">Loading from Airtable...</div></div>
     <div class="pagination" id="exp-pagination"></div>
   </div>
 </div>
@@ -172,51 +191,263 @@ tr:hover td{background:#fafafa}
 <script>
 const AT_TOKEN = "patguPO1PluxJKr5O.ca16ba80928fc3767cc28e9bee32f09b172e31f5944914b3b30a42b8d55bf54d";
 const AT_BASE = "appm94Nanu5eZgveU";
-const AT_TABLE = "tbl43qHrT8yJEpl0u";
+const AT_PEOPLE = "tbl43qHrT8yJEpl0u";
 
 const TARGET_SECTORS = {
-  consumer_tech:['spotify','tiktok','snap','instagram','meta','facebook','twitter','reddit','discord','twitch','youtube','netflix','airbnb','doordash','uber','lyft','whatnot','depop','poshmark','etsy','ebay','shopify','shopmy','substack','duolingo','bumble','hinge','match','pinterest'],
-  platform_infra:['stripe','plaid','brex','ramp','mercury','relay','method','unit','column','finix','lithic','marqeta','adyen','checkout','twilio','sendgrid','segment','mixpanel','amplitude','datadog','cloudflare','vercel','auth0','okta','rippling','workday','servicenow','salesforce','hubspot','notion','linear','figma','github','gitlab','anthropic','openai','cursor','coreweave','crusoe','coinbase','kraken','robinhood','chime','wise','braintree','paypal','square','block','carta','gusto','deel','lattice','harness','harvey'],
-  physical_world:['anduril','palantir','spacex','axiom','relativity','joby','archer','wisk','zipline','shield ai','sarcos','apptronik','figure','boston dynamics','rivian','lucid','canoo','peak energy','samsara','motive','getyourguide','probook','thumbtack','angi','goshine','eliseai','tesla','waymo','cruise','aurora','nuro','oshkosh','deere','ge','siemens','honeywell','lockheed','raytheon','northrop','l3harris','booz allen','leidos','saic']
+  'Consumer Tech':['meta','facebook','instagram','twitter','tiktok','snap','snapchat','reddit','discord','pinterest','nextdoor','spotify','netflix','twitch','youtube','soundcloud','substack','duolingo','bumble','hinge','match','tinder','roblox','airbnb','etsy','ebay','whatnot','depop','poshmark','vinted','stockx','doordash','instacart','gopuff','grubhub','uber','lyft','shopify','shopmy','robinhood','coinbase','chime','venmo','wise','revolut','nubank','monzo','openai','character.ai','canva','peloton','headspace','calm','linkedin'],
+  'Platform Infra':['stripe','plaid','adyen','checkout.com','braintree','marqeta','lithic','finix','unit','column','modern treasury','mercury','increase','twilio','sendgrid','bandwidth','vonage','sinch','auth0','okta','stytch','persona','alloy','socure','segment','rudderstack','amplitude','mixpanel','databricks','snowflake','fivetran','airbyte','datadog','new relic','grafana','sentry','pagerduty','cloudflare','fastly','akamai','github','gitlab','vercel','netlify','supabase','planetscale','neon','salesforce','hubspot','notion','linear','figma','miro','anthropic','cohere','mistral','zendesk','intercom','contentful','palantir','relay'],
+  'Physical World':['anduril','shield ai','l3harris','lockheed','raytheon','northrop','boeing','general dynamics','bae systems','spacex','rocket lab','relativity space','axiom space','blue origin','commonwealth fusion','helion','terrapower','oklo','kairos','nextera','peak energy','nvidia','amd','intel','tsmc','asml','applied materials','coreweave','crusoe','lambda labs','etched','groq','cerebras','d-matrix','tenstorrent','tesla','rivian','lucid','canoo','nikola','waymo','cruise','aurora','kodiak','nuro','joby','archer','wisk','lilium','boston dynamics','figure','apptronik','agility robotics','sarcos','divergent','velo3d','markforged','desktop metal','carbon','illumina','10x genomics']
 };
-const TARGET_ROLES=['chief of staff','biz ops','bizops','business operations','strategy','operations','revenue operations','revops','go-to-market','gtm','product operations','program manager','chief operating','head of ops','director of ops','vp of ops','head of strategy','director of strategy','general manager'];
-const SKIP_ROLES=['software engineer','swe','data scientist','machine learning','ml engineer','ux designer','ui designer','recruiter','recruiting','talent acquisition','accountant','lawyer','attorney','sales development','sdr','bdr','customer success manager','customer support','site reliability'];
+const TARGET_ROLES=['chief of staff','biz ops','bizops','business operations','strategy and operations','strategy & operations','strategy & ops','revenue operations','revops','go-to-market','gtm','product operations','chief operating','coo','head of operations','director of operations','vp of operations','vp, operations','head of strategy','director of strategy','vp of strategy','vp, strategy','strategy manager','strategy director','strategy lead','strategy analyst','general manager','head of biz','director of biz','program manager','finance and operations','finance & operations','head of growth','director of growth'];
+const SKIP_ROLES=['software engineer','senior software','staff software','principal engineer','data scientist','machine learning','ml engineer','data engineer','ux designer','ui designer','product designer','recruiter','talent acquisition','sourcer','talent coordinator','talent partner','talent advisor','accountant','lawyer','attorney','legal counsel','paralegal','sales development','sdr','bdr','account executive','account manager','customer success manager','customer success specialist','customer support','customer service','site reliability','devops','security engineer','investment banker','private equity','venture capital','physician','doctor','nurse','resident physician','medical student','law clerk','judicial','financial analyst','wealth advisor','wealth management'];
 
-let allConnections = [{"n": "Reymark Vargas", "co": "SpaceX", "p": "Customer Success Specialist (APAC), Starlink Business Operations", "u": "https://www.linkedin.com/in/reymark-vargas", "dt": "18 Mar 2026", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Stephen Ipe Varghese", "co": "Method", "p": "Head of Strategic Finance and Business Operations", "u": "https://www.linkedin.com/in/stephen-ipe-varghese-a1393266", "dt": "06 Mar 2026", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Brian Trench", "co": "Harness", "p": "Director, Revenue Operations & Strategy", "u": "https://www.linkedin.com/in/brian-trench-04594a99", "dt": "18 Feb 2026", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "John Hewitt", "co": "Harvey", "p": "GTM @ Harvey", "u": "https://www.linkedin.com/in/john-hewitt-96537741", "dt": "17 Feb 2026", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Carey Appeldorn", "co": "Coinbase", "p": "Senior Director of Business Operations & Strategy", "u": "https://www.linkedin.com/in/carey-appeldorn", "dt": "15 Feb 2026", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Kennedy Loper", "co": "TechUnited", "p": "Head of Operations & Community", "u": "https://www.linkedin.com/in/kennedyloper", "dt": "09 Feb 2026", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Angie Lillard", "co": "Target", "p": "Human Resources Expert - Operations & Generalist", "u": "https://www.linkedin.com/in/angielillard", "dt": "20 Nov 2024", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Ryan Wong", "co": "Figma", "p": "Director Sales Operations", "u": "https://www.linkedin.com/in/ryan-wong-b671a515", "dt": "29 Apr 2024", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Adam Turnbull", "co": "Square", "p": "Head of Product, Policy and Operations, Square Banking", "u": "https://www.linkedin.com/in/adamjturnbull", "dt": "23 Nov 2023", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Tatiana Petelina", "co": "Gusto", "p": "Chief of Staff, Strategy and Growth", "u": "https://www.linkedin.com/in/tatiana-petelina", "dt": "16 Nov 2023", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Fernando Cavalcanti Bello", "co": "Smart Age Solutions", "p": "COO - Operations Director", "u": "https://www.linkedin.com/in/fcbello", "dt": "16 May 2023", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Jonathan Rossi", "co": "Airbnb", "p": "Senior Program Manager, Community Support", "u": "https://www.linkedin.com/in/jonathan-rossi", "dt": "06 Aug 2022", "s": "consumer_tech", "rm": true, "sc": 5}, {"n": "Jeffrey Dresnick", "co": "Uber", "p": "Senior Program Manager - Customer Insights", "u": "https://www.linkedin.com/in/jdresnick", "dt": "20 Jun 2022", "s": "consumer_tech", "rm": true, "sc": 5}, {"n": "Anna Zambon", "co": "Applied Blockchain", "p": "Growth & Strategy Executive", "u": "https://www.linkedin.com/in/anna-zambon", "dt": "05 Aug 2021", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Samuel Lopez III", "co": "Stripe", "p": "Risk Operations Analyst", "u": "https://www.linkedin.com/in/samuel-lopez-iii-4b71b4109", "dt": "14 Jul 2021", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Elianna Wasser", "co": "Our Campus United", "p": "Chief of Staff", "u": "https://www.linkedin.com/in/elianna-s-wasser", "dt": "18 Nov 2020", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Thornley Francis Griffin", "co": "Lattice", "p": "Senior Manager, Revenue Operations", "u": "https://www.linkedin.com/in/thornley-francis-griffin-90106756", "dt": "03 Dec 2019", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Tatsuya Hayashi", "co": "Gemini", "p": "Corporate Development & Strategy", "u": "https://www.linkedin.com/in/tatsuya-hayashi", "dt": "08 Aug 2018", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Nicholas Dunlap", "co": "The Cambridge Group", "p": "Principal - Growth Strategy", "u": "https://www.linkedin.com/in/nicholas-dunlap-a223227b", "dt": "04 Aug 2018", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Zachary Colpean", "co": "ConnectGEN LLC", "p": "Manager, Finance and Strategy", "u": "https://www.linkedin.com/in/zachary-colpean-60", "dt": "29 Aug 2017", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Eden Sung", "co": "Legal Vocation Fellowship", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/edensung", "dt": "11 Nov 2016", "s": "physical_world", "rm": true, "sc": 5}, {"n": "Dalton Schmit", "co": "YouTube", "p": "Operations Manager", "u": "https://www.linkedin.com/in/dalton-schmit", "dt": "13 Nov 2015", "s": "consumer_tech", "rm": true, "sc": 5}, {"n": "Matheus Mauricio", "co": "Uber", "p": "Senior Technical Program Manager, Sales Automation Engineering", "u": "https://www.linkedin.com/in/matheus-mauricio-678a3981", "dt": "04 Aug 2015", "s": "consumer_tech", "rm": true, "sc": 5}, {"n": "Mustafa Ibrahim", "co": "Checkout.com", "p": "Director, Corporate Finance & Strategy", "u": "https://www.linkedin.com/in/mustafa-ibrahim16", "dt": "20 Jul 2014", "s": "platform_infra", "rm": true, "sc": 5}, {"n": "Jared Barol", "co": "Various Companies", "p": "Member of the Board of Advisors, GTM Advisor", "u": "https://www.linkedin.com/in/jaredbarol", "dt": "21 Mar 2026", "s": null, "rm": true, "sc": 2}, {"n": "Phil O'Doherty", "co": "Tines", "p": "Director of Revenue Operations", "u": "https://www.linkedin.com/in/philod", "dt": "18 Mar 2026", "s": null, "rm": true, "sc": 2}, {"n": "Albert Richards", "co": "Polymarket", "p": "Head of Operations", "u": "https://www.linkedin.com/in/albert-richards-aa8109140", "dt": "05 Mar 2026", "s": null, "rm": true, "sc": 2}, {"n": "Catherine Coyne", "co": "NBCUniversal", "p": "Associate | Valuation & Strategy (Media/Streaming)", "u": "https://www.linkedin.com/in/catherinemcoyne", "dt": "27 Feb 2026", "s": null, "rm": true, "sc": 2}, {"n": "Charles Horner", "co": "Materialize", "p": "VP Finance and Operations", "u": "https://www.linkedin.com/in/charles-horner-500079a2", "dt": "25 Feb 2026", "s": null, "rm": true, "sc": 2}, {"n": "Page Crahan", "co": "X, the moonshot factory", "p": "GM, X's Moonshot for the Electric Grid", "u": "https://www.linkedin.com/in/page-crahan", "dt": "19 Feb 2026", "s": null, "rm": true, "sc": 2}, {"n": "Hashim Syed", "co": "Google", "p": "AI GTM Lead, Startups, North America, Google Cloud", "u": "https://www.linkedin.com/in/hashim-syed", "dt": "06 Feb 2026", "s": null, "rm": true, "sc": 2}, {"n": "Jane Maslianska", "co": "Hire 1", "p": "Co-Founder | Recruitment Operations", "u": "https://www.linkedin.com/in/jane-maslianska", "dt": "02 Feb 2026", "s": null, "rm": true, "sc": 2}, {"n": "Axel Browne", "co": "Edge", "p": "Quantitative Research Consultant (Risk Team)", "u": "https://www.linkedin.com/in/axel505", "dt": "28 Jan 2026", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Peter Wofford", "co": "Leucadia Talent Agency", "p": "Founder", "u": "https://www.linkedin.com/in/peterwofford", "dt": "22 Jan 2026", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Pavan Kumar Kuchibhatla", "co": "Salesforce", "p": "Engineering Architect", "u": "https://www.linkedin.com/in/pavankumarkuchibhatla", "dt": "26 Dec 2025", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Thomas (Tommy) Parks, CFP\u00ae, CLU\u00ae, ChFC\u00ae", "co": "Heritage Planning Partners", "p": "Wealth Management Advisor", "u": "https://www.linkedin.com/in/thomastommyparks", "dt": "17 Oct 2025", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Christopher Jones", "co": "Twilio", "p": "Sr. Strategic Account Executive | ISV - Martech", "u": "https://www.linkedin.com/in/cjonesatl", "dt": "15 Oct 2025", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Celina Grzesz", "co": "Mux", "p": "GTM Ops Specialist", "u": "https://www.linkedin.com/in/celina-grzesz-721840225", "dt": "13 Oct 2025", "s": null, "rm": true, "sc": 2}, {"n": "Cate Alexander", "co": "Vistage Worldwide, Inc.", "p": "Product Management Intern", "u": "https://www.linkedin.com/in/cate-alexander-a733152b4", "dt": "03 Oct 2025", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Melody Gonzalez, LSSGB", "co": "Braze", "p": "Manager, CX Operations", "u": "https://www.linkedin.com/in/melody-gonzalez-lssgb-70363b91", "dt": "25 Sep 2025", "s": null, "rm": true, "sc": 2}, {"n": "William Long", "co": "Braze", "p": "Director, Messaging Operations", "u": "https://www.linkedin.com/in/william-long60", "dt": "22 Aug 2025", "s": null, "rm": true, "sc": 2}, {"n": "Esteban Cruz Trujillo", "co": "Braze", "p": "Email Operations Analyst", "u": "https://www.linkedin.com/in/ecruzt", "dt": "21 Aug 2025", "s": null, "rm": true, "sc": 2}, {"n": "Gretchen Newell", "co": "Plaid", "p": "Event Program Specialist", "u": "https://www.linkedin.com/in/gretchen-newell-344404199", "dt": "20 Aug 2025", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Natasha Bobbe", "co": "222", "p": "Head of Operations", "u": "https://www.linkedin.com/in/natasha-bobbe", "dt": "15 Aug 2025", "s": null, "rm": true, "sc": 2}, {"n": "Benjamin Julie", "co": "EliseAI", "p": "Strategic Account Executive", "u": "https://www.linkedin.com/in/benjamin-julie-a8325532", "dt": "14 Jul 2025", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ryc Oca", "co": "Braze", "p": "Senior Director, Monetization & Pricing Strategy", "u": "https://www.linkedin.com/in/ryc-oca", "dt": "09 Jul 2025", "s": null, "rm": true, "sc": 2}, {"n": "Pranay Jain", "co": "Braze", "p": "VP Market Strategy", "u": "https://www.linkedin.com/in/pranayjimmyjain", "dt": "05 Jul 2025", "s": null, "rm": true, "sc": 2}, {"n": "Kerri Lau", "co": "Magna Search Group", "p": "Director of Recruitment & Operations", "u": "https://www.linkedin.com/in/kerrilau", "dt": "15 Jun 2025", "s": null, "rm": true, "sc": 2}, {"n": "Phoenix Vinci", "co": "Yext", "p": "Principal Talent Advisor - Marketing, Product & GTM Strategy", "u": "https://www.linkedin.com/in/phoenixvinci", "dt": "29 Apr 2025", "s": null, "rm": true, "sc": 2}, {"n": "Fernanda Faria", "co": "Braze", "p": "Manager, Global Business Operations/Program", "u": "https://www.linkedin.com/in/fernanda-souza-faria", "dt": "23 Apr 2025", "s": null, "rm": true, "sc": 2}, {"n": "Ankush Bansal", "co": "eBay", "p": "Senior Product Manager Technical", "u": "https://www.linkedin.com/in/ankushbansal3103", "dt": "02 Apr 2025", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Scott Eyre-Walker", "co": "Braze", "p": "SMS Operations Manager", "u": "https://www.linkedin.com/in/seyrewalker", "dt": "15 Mar 2025", "s": null, "rm": true, "sc": 2}, {"n": "Gemma Horn", "co": "Braze", "p": "Senior Product Program Manager", "u": "https://www.linkedin.com/in/gemmahorn", "dt": "12 Feb 2025", "s": null, "rm": true, "sc": 2}, {"n": "Alinne Amorim", "co": "Braze", "p": "Team Lead, SMS Operations", "u": "https://www.linkedin.com/in/alinneamorim", "dt": "03 Nov 2024", "s": null, "rm": true, "sc": 2}, {"n": "Jerico Brewer", "co": "WithCoverage", "p": "Head of Talent", "u": "https://www.linkedin.com/in/jerico-brewer", "dt": "03 Nov 2024", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Alyson Avakian", "co": "Braze", "p": "Manager, Talent Development Strategy and Operations", "u": "https://www.linkedin.com/in/alyson-avakian", "dt": "03 Nov 2024", "s": null, "rm": true, "sc": 2}, {"n": "Nellina Alarc\u00f3n", "co": "Securitize", "p": "Legal Operations Manager", "u": "https://www.linkedin.com/in/nellina", "dt": "03 Nov 2024", "s": null, "rm": true, "sc": 2}, {"n": "Lina Cepeda", "co": "Braze", "p": "GTM Productivity Strategy", "u": "https://www.linkedin.com/in/lina-cepeda", "dt": "30 Oct 2024", "s": null, "rm": true, "sc": 2}, {"n": "Patrick Shimabukuro", "co": "eBay", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/marcelpatrick", "dt": "28 Oct 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Alon Gilboa", "co": "qbiq", "p": "Business Operations Lead", "u": "https://www.linkedin.com/in/alongilboa", "dt": "14 Sep 2024", "s": null, "rm": true, "sc": 2}, {"n": "Steven Waudby", "co": "Staff Agency.com LLC (formerly Delta Hire, LLC)", "p": "Managing Director", "u": "https://www.linkedin.com/in/steven-waudby-50882821", "dt": "27 Aug 2024", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ally Opstedal", "co": "Block Renovation", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/ally-opstedal", "dt": "20 Aug 2024", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Daniel Rubinov", "co": "CityDME", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/daniel-rubinov", "dt": "18 Jul 2024", "s": null, "rm": true, "sc": 2}, {"n": "Carina Hosu", "co": "Publicis Media", "p": "Vice President, Audience Strategy", "u": "https://www.linkedin.com/in/carina-hosu", "dt": "02 Jul 2024", "s": null, "rm": true, "sc": 2}, {"n": "Rohan Goswami", "co": "Garner Health", "p": "General Manager, Provider", "u": "https://www.linkedin.com/in/rohangoswami", "dt": "28 Jun 2024", "s": null, "rm": true, "sc": 2}, {"n": "Regev Erez", "co": "Augmented Intelligence (AUI\u2122)", "p": "Director of Product", "u": "https://www.linkedin.com/in/regev-erez-41a48a197", "dt": "16 Jun 2024", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jonathan Hofmann", "co": "Via", "p": "Vice President, Global Talent & People Operations", "u": "https://www.linkedin.com/in/jonathan-h-2b00874a", "dt": "13 Jun 2024", "s": null, "rm": true, "sc": 2}, {"n": "Fanny Chen", "co": "Bridge", "p": "Talent", "u": "https://www.linkedin.com/in/fannychen1", "dt": "12 Jun 2024", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Antonio (Tony) Nunez", "co": "Rippling", "p": "Team Lead", "u": "https://www.linkedin.com/in/antonio-tony-nunez-8b121727", "dt": "10 Jun 2024", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Nishchala Bhandari", "co": "Uber", "p": "Product Manager", "u": "https://www.linkedin.com/in/nishchala-bhandari", "dt": "06 Jun 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Tyler Faux", "co": "Whatnot", "p": "Product, Sellers & Marketplace", "u": "https://www.linkedin.com/in/tbfaux", "dt": "06 May 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Ashley(Hanqiu) Zhou", "co": "Carta", "p": "Lead Product Manager", "u": "https://www.linkedin.com/in/ashley-hanqiu-zhou-581b2380", "dt": "03 May 2024", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Chris Simmons", "co": "Meta", "p": "Product Manager", "u": "https://www.linkedin.com/in/chris-simmons-83057119a", "dt": "19 Apr 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Nicholas A. Gnan", "co": "Peers Studio", "p": "Head of Strategy & Growth Consulting", "u": "https://www.linkedin.com/in/nicholas-gnan", "dt": "18 Apr 2024", "s": null, "rm": true, "sc": 2}, {"n": "Gabriel Ruimy", "co": "Bloom8 (fka RAGE Capital)", "p": "Co-founder, Managing Partner", "u": "https://www.linkedin.com/in/gabriel-ruimy", "dt": "18 Apr 2024", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Subhashree Rengarajan", "co": "Snap Inc.", "p": "Product", "u": "https://www.linkedin.com/in/subharengarajan", "dt": "18 Apr 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "James Correa", "co": "FireFoil", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/jamesacorrea", "dt": "15 Apr 2024", "s": null, "rm": true, "sc": 2}, {"n": "Eduardo Zulueta", "co": "Ennoble Care", "p": "MBA Operations Intern", "u": "https://www.linkedin.com/in/eduardo-zulueta-13b888a2", "dt": "24 Mar 2024", "s": null, "rm": true, "sc": 2}, {"n": "Amit Mukherjee", "co": "Northern Trust", "p": "Head of Product Strategy, Asset Management | Senior Vice President", "u": "https://www.linkedin.com/in/amitavha", "dt": "14 Mar 2024", "s": null, "rm": true, "sc": 2}, {"n": "Teddy Nwachuku", "co": "Black Ore", "p": "VP of Operations", "u": "https://www.linkedin.com/in/tnwachuku", "dt": "12 Mar 2024", "s": null, "rm": true, "sc": 2}, {"n": "Ani Tiwari", "co": "PayPal", "p": "Group Product Manager, Risk and Compliance Platform", "u": "https://www.linkedin.com/in/ani-tiwari-816a4921", "dt": "14 Feb 2024", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Hossam Tewfik", "co": "Meta", "p": "Head User & Brand Creator Monetization Product", "u": "https://www.linkedin.com/in/hossamtewfik", "dt": "08 Feb 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Brandon Carl", "co": "Smarsh", "p": "Executive Vice President AI and Product Strategy", "u": "https://www.linkedin.com/in/brandonjcarl", "dt": "06 Feb 2024", "s": null, "rm": true, "sc": 2}, {"n": "Sandeep Srinivasan", "co": "ServiceNow", "p": "Senior Staff Product Manager - Agentic AI", "u": "https://www.linkedin.com/in/sandeepsrinivasan", "dt": "30 Jan 2024", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Ayub Dahir", "co": "Meta", "p": "Product Manager, AI", "u": "https://www.linkedin.com/in/ayubdahir", "dt": "19 Jan 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Ashish Gupta", "co": "Meta", "p": "Engineering Manager", "u": "https://www.linkedin.com/in/ashishgupta", "dt": "05 Jan 2024", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Lucas Glickman", "co": "SpaceX", "p": "Chemical Engineering Intern", "u": "https://www.linkedin.com/in/lucas-glickman", "dt": "20 Dec 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Claudia Herbert, PhD", "co": "Merenti Capital GmbH", "p": "Director of Operations", "u": "https://www.linkedin.com/in/claudiaherbert", "dt": "14 Dec 2023", "s": null, "rm": true, "sc": 2}, {"n": "Carly Berman", "co": "ServiceNow", "p": "Senior Director, Digital Experience", "u": "https://www.linkedin.com/in/carlyberman", "dt": "05 Dec 2023", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Sudhir Bakhru", "co": "Salesforce", "p": "Senior Director of Product Management (AI Platform)", "u": "https://www.linkedin.com/in/sudhirbakhru", "dt": "05 Dec 2023", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Jeff Hardison", "co": "Sanity", "p": "VP of Product Marketing", "u": "https://www.linkedin.com/in/jeff-hardison", "dt": "16 Nov 2023", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Nadir Ben", "co": "Axel Springer National Media & Tech GmbH & Co. KG", "p": "Vice President of Product & Engineering", "u": "https://www.linkedin.com/in/nadirbenkhellouf", "dt": "14 Nov 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jonathan Packer", "co": "Meta", "p": "Product Manager", "u": "https://www.linkedin.com/in/jonathan-packer-9b9a0817", "dt": "26 Oct 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Robert Tod", "co": "Anthropic", "p": "Member of Technical Staff", "u": "https://www.linkedin.com/in/roberttod", "dt": "20 Oct 2023", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "John VH Sellars", "co": "Via", "p": "Partner Support Operations Associate", "u": "https://www.linkedin.com/in/jvhsellars", "dt": "22 Sep 2023", "s": null, "rm": true, "sc": 2}, {"n": "Scott Woodbury-Stewart", "co": "Target Test Prep", "p": "CEO and Founder", "u": "https://www.linkedin.com/in/scottwoodburystewart", "dt": "22 Sep 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ian Kaplan", "co": "Warp", "p": "GTM", "u": "https://www.linkedin.com/in/ian-kaplan-6a4461198", "dt": "21 Sep 2023", "s": null, "rm": true, "sc": 2}, {"n": "Max Brenner", "co": "WithCoverage", "p": "Co-Founder & CEO", "u": "https://www.linkedin.com/in/max-brenner-136104", "dt": "11 Sep 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Rishu Arora", "co": "Netflix", "p": "Senior Director of Product Management, Customer Growth and Identity Systems", "u": "https://www.linkedin.com/in/rishu-arora-05065320", "dt": "07 Sep 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Sunny S Anand", "co": "Zupee", "p": "Strategy, Policy & Government affairs", "u": "https://www.linkedin.com/in/sunnysanand", "dt": "01 Sep 2023", "s": null, "rm": true, "sc": 2}, {"n": "Lillie Manqian Huang", "co": "Tesla", "p": "Staff Product Manager", "u": "https://www.linkedin.com/in/lilliehuang", "dt": "31 Aug 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Samrudhi Patil", "co": "Tesla", "p": "Staff Product Manager, Digital Experience", "u": "https://www.linkedin.com/in/samrudhi-patil", "dt": "30 Aug 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Amy Jeffrey", "co": "Reddit, Inc.", "p": "Senior Group Product Manager, Core Product", "u": "https://www.linkedin.com/in/amy-jeffrey", "dt": "25 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Pahel Makhija", "co": "Tesla", "p": "Staff Product Manager", "u": "https://www.linkedin.com/in/pahelmakhija", "dt": "24 Aug 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Kieran Cousins", "co": "Pinterest", "p": "Product Manager", "u": "https://www.linkedin.com/in/kieran-cousins", "dt": "24 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Max Brenssell", "co": "Slack", "p": "Director GTM & Product Strategy", "u": "https://www.linkedin.com/in/max-brenssell", "dt": "24 Aug 2023", "s": null, "rm": true, "sc": 2}, {"n": "Vaibhav Rastogi", "co": "Pinterest", "p": "Group Product Manager, Conversion Visibility", "u": "https://www.linkedin.com/in/vaibhavrastogi", "dt": "22 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Molly Shelestak", "co": "Contentsquare", "p": "Senior Director of Product Management", "u": "https://www.linkedin.com/in/shelestak", "dt": "22 Aug 2023", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Anshul Madappa", "co": "Uber", "p": "Product Manager", "u": "https://www.linkedin.com/in/anshul-madappa-825a21149", "dt": "21 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Gavin Wang", "co": "TikTok", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/gavin-zhuoming", "dt": "18 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Hugh Perkins", "co": "Genesis AI", "p": "Member of Technical Staff", "u": "https://www.linkedin.com/in/hughperkins", "dt": "17 Aug 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Prasanna Tamminayana", "co": "Bumble Inc.", "p": "Senior Product Manager, Safety Experiences", "u": "https://www.linkedin.com/in/prasanna-tamminayana", "dt": "17 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Robert Tucker", "co": "Meta", "p": "Product Manager", "u": "https://www.linkedin.com/in/robert-tucker-4b089023", "dt": "17 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Klinton Bicknell", "co": "Duolingo", "p": "Head of AI", "u": "https://www.linkedin.com/in/klintonbicknell", "dt": "17 Aug 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Easwar Paidipalli", "co": "Aberdeen Advisors LLC", "p": "Digital Strategy Consultant", "u": "https://www.linkedin.com/in/easwara-paidipalli", "dt": "10 Aug 2023", "s": null, "rm": true, "sc": 2}, {"n": "Naomi Jaeger", "co": "EY-Parthenon", "p": "Strategy Director", "u": "https://www.linkedin.com/in/naomi-jaeger", "dt": "19 Jun 2023", "s": null, "rm": true, "sc": 2}, {"n": "David Lobo", "co": "Rain", "p": "Head of Business Operations", "u": "https://www.linkedin.com/in/davidjlobo", "dt": "07 Jun 2023", "s": null, "rm": true, "sc": 2}, {"n": "Rohan Kalantri", "co": "Uber", "p": "Product Manager, AI", "u": "https://www.linkedin.com/in/rohankalantri", "dt": "21 Apr 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Dave Games", "co": "Surge AI", "p": "Partnerships & Business Development", "u": "https://www.linkedin.com/in/davegames", "dt": "19 Apr 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Hiral Dave", "co": "Genea", "p": "Senior Product Owner", "u": "https://www.linkedin.com/in/hiral-dave-289a7516a", "dt": "17 Apr 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Raaj .", "co": "ASAPP", "p": "Operations - India", "u": "https://www.linkedin.com/in/srieeraaj", "dt": "21 Mar 2023", "s": null, "rm": true, "sc": 2}, {"n": "Austin Tousaw", "co": "McDonald's", "p": "Senior Manager, Global Data Security Operations", "u": "https://www.linkedin.com/in/austintousaw", "dt": "09 Mar 2023", "s": null, "rm": true, "sc": 2}, {"n": "Dzmitry Guzhonak", "co": "Solvd, Inc.", "p": "Associate Director of Quality Engineering & GRC, Strategy", "u": "https://www.linkedin.com/in/dzmitry-guzhonak-76691a64", "dt": "28 Feb 2023", "s": null, "rm": true, "sc": 2}, {"n": "Greg Goldberg", "co": "TikTok", "p": "Technical Sourcer", "u": "https://www.linkedin.com/in/greggoldberg1", "dt": "23 Feb 2023", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Steve Englander", "co": "United States Lab", "p": "Head of Product + R&D", "u": "https://www.linkedin.com/in/steveenglander", "dt": "26 Jan 2023", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Jason Gerk", "co": "Shield AI", "p": "CISO", "u": "https://www.linkedin.com/in/jason-gerk", "dt": "13 Jan 2023", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Michelle Schwartz", "co": "Cloudflare", "p": "Executive Assistant", "u": "https://www.linkedin.com/in/michelleschwartz0306", "dt": "30 Dec 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Rick Hoefert", "co": "Tera", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/rhoefert", "dt": "02 Dec 2022", "s": null, "rm": true, "sc": 2}, {"n": "Ingrid Pan", "co": "Meta", "p": "Product Manager", "u": "https://www.linkedin.com/in/ingrid-pan", "dt": "02 Dec 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Christopher Mosconi", "co": "Ressio Software", "p": "Engineering Chief of Staff", "u": "https://www.linkedin.com/in/christophermosconi", "dt": "28 Nov 2022", "s": null, "rm": true, "sc": 2}, {"n": "Micaela Seybold, CSM", "co": "Swiftly", "p": "Senior Manager TPM & Product Operations", "u": "https://www.linkedin.com/in/micaela-seybold", "dt": "28 Nov 2022", "s": null, "rm": true, "sc": 2}, {"n": "Laura Primard", "co": "INTESCIA GROUP", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/laura-primard-a5105a25", "dt": "14 Nov 2022", "s": null, "rm": true, "sc": 2}, {"n": "Shubham Chandra", "co": "Digital Realty", "p": "Go-To-Market Engineering", "u": "https://www.linkedin.com/in/shubhamchandra", "dt": "08 Nov 2022", "s": null, "rm": true, "sc": 2}, {"n": "Timir Bharucha, PhD., LPC, CPP", "co": "TikTok", "p": "Head of Wellbeing Standards & Assurance", "u": "https://www.linkedin.com/in/timir-bharucha-phd-lpc-cpp-600259b1", "dt": "12 Oct 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Hector Santillan Vazquez", "co": "Uber", "p": "Applied Scientist II, Legal Data & Economics", "u": "https://www.linkedin.com/in/hectorsanvaz", "dt": "10 Oct 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Cosima Wands", "co": "Airbnb", "p": "Product Manager", "u": "https://www.linkedin.com/in/cosima-wands-0252b280", "dt": "28 Sep 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Zawad Ahmed", "co": "HubSpot", "p": "Growth Specialist", "u": "https://www.linkedin.com/in/zawad2095", "dt": "21 Aug 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Mya Havard", "co": "DoorDash", "p": "Product Manager", "u": "https://www.linkedin.com/in/mya-havard-b5647578", "dt": "16 Aug 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Sean Smith", "co": "Lambda", "p": "GTM - Enterprise", "u": "https://www.linkedin.com/in/sean-smith-5a463a12", "dt": "10 Aug 2022", "s": null, "rm": true, "sc": 2}, {"n": "Kayla Akhurst", "co": "Uber", "p": "Product Manager", "u": "https://www.linkedin.com/in/kayla-akhurst-ab2ab6232", "dt": "03 Aug 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Heather Reed", "co": "Airbnb", "p": "Platform Product Manager", "u": "https://www.linkedin.com/in/heather-reed-197963b2", "dt": "22 Jul 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Edward Silvey, MBA, CSM", "co": "AKASA", "p": "Senior Technical Program Manager", "u": "https://www.linkedin.com/in/edsilvey", "dt": "20 Jul 2022", "s": null, "rm": true, "sc": 2}, {"n": "Alexander Nafman", "co": "Foursquare", "p": "Director of Customer Analytics", "u": "https://www.linkedin.com/in/alexander-nafman-5a678852", "dt": "16 Jul 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Adrian Botta", "co": "Airbnb", "p": "Platform Product Manager", "u": "https://www.linkedin.com/in/adrianbotta", "dt": "15 Jul 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Yi Yang", "co": "Meta", "p": "Engineering Manager", "u": "https://www.linkedin.com/in/yiyangnlp", "dt": "15 Jul 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Brandon Sheffer", "co": "Nexagen Networks, Inc.", "p": "Senior Software Development Architect", "u": "https://www.linkedin.com/in/brandonsheffer", "dt": "15 Jul 2022", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Michael Griffiths", "co": "OpenAI", "p": "Member of Technical Staff", "u": "https://www.linkedin.com/in/msjgriffiths", "dt": "15 Jul 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Haileab Berhane", "co": "Lyft", "p": "Data Engineer", "u": "https://www.linkedin.com/in/haileab", "dt": "09 Jul 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Bindya Shivaram", "co": "Airbnb", "p": "Lead Product Manager", "u": "https://www.linkedin.com/in/bindyashivaram", "dt": "06 Jul 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Jonathan Holmgren", "co": "Seven Sundays", "p": "Director Commercial Operations", "u": "https://www.linkedin.com/in/jonathan-holmgren", "dt": "01 Jul 2022", "s": null, "rm": true, "sc": 2}, {"n": "Ted Burke", "co": "Airbnb", "p": "Product Lead", "u": "https://www.linkedin.com/in/burketed", "dt": "29 Jun 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Roderick Rodriguez", "co": "Aura Intelligence", "p": "Staff Engineer/Head of Product Engineering", "u": "https://www.linkedin.com/in/roderickrodriguez", "dt": "25 Jun 2022", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Suzanne Heinrichs", "co": "Cisco", "p": "Engineering Program Manager - Security Business Group", "u": "https://www.linkedin.com/in/suzanne-heinrichs-505", "dt": "24 Jun 2022", "s": null, "rm": true, "sc": 2}, {"n": "Zachary Landzberg", "co": "Duolingo", "p": "Senior Manager, Business Development and Partnerships", "u": "https://www.linkedin.com/in/zachary-landzberg", "dt": "21 Jun 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Hannah Crane", "co": "EisnerAmper", "p": "Senior Consultant Government Services", "u": "https://www.linkedin.com/in/hannah-crane-a99346141", "dt": "20 Jun 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Saidusmon Oripov \ud83d\udc4b", "co": "Stealth Mode", "p": "General Manager", "u": "https://www.linkedin.com/in/saidusmon", "dt": "05 Jun 2022", "s": null, "rm": true, "sc": 2}, {"n": "Christine Kline", "co": "ExecThread", "p": "Chief of Staff", "u": "https://www.linkedin.com/in/christinekline", "dt": "25 May 2022", "s": null, "rm": true, "sc": 2}, {"n": "Adam Aviv", "co": "Bumble", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/adamaviv", "dt": "22 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Ryan Krueger", "co": "Twilio", "p": "Product Manager", "u": "https://www.linkedin.com/in/rkrueger11", "dt": "20 May 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Alex Sola-Guinto", "co": "Cursor", "p": "Talent", "u": "https://www.linkedin.com/in/asolaguinto", "dt": "17 May 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Caitlin Golden, MA", "co": "LinkedIn", "p": "Senior Content Program Manager, Content Discovery", "u": "https://www.linkedin.com/in/caitlin-golden-seattle", "dt": "17 May 2022", "s": null, "rm": true, "sc": 2}, {"n": "Tong Zhang", "co": "Instagram", "p": "Product Manager", "u": "https://www.linkedin.com/in/tongzhang1", "dt": "12 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Sachi Shah", "co": "Figma", "p": "Product Manager, Workflow", "u": "https://www.linkedin.com/in/sachi-shah1", "dt": "11 May 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Dev Iyer", "co": "Locunity", "p": "CTO & Co-Founder", "u": "https://www.linkedin.com/in/devpiyer", "dt": "11 May 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Alexandra Beja", "co": "Spotify", "p": "Group Product Manager", "u": "https://www.linkedin.com/in/alexandrabeja", "dt": "09 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Janelle Tong", "co": "Meta", "p": "Product Manager (AI Glasses)", "u": "https://www.linkedin.com/in/janelletong", "dt": "07 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Kameron Hutchinson", "co": "Instagram", "p": "Product Manager", "u": "https://www.linkedin.com/in/kameron-hutchinson", "dt": "05 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Saur Vasil", "co": "DoorDash", "p": "Lead Product Manager", "u": "https://www.linkedin.com/in/saurvasil", "dt": "04 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Frank Ramirez", "co": "Meta", "p": "Product Manager", "u": "https://www.linkedin.com/in/frankpierreramirez", "dt": "03 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Richie Wu", "co": "Brex", "p": "Group Product Manager", "u": "https://www.linkedin.com/in/chardwu", "dt": "03 May 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Chloe Imus", "co": "Mercury", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/chloe-imus", "dt": "03 May 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Leila Benson", "co": "Pinterest", "p": "Product", "u": "https://www.linkedin.com/in/leilabenson", "dt": "02 May 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Tiffany Yue", "co": "Gecko Robotics, Inc.", "p": "Product Lead", "u": "https://www.linkedin.com/in/tiffanyyue-", "dt": "01 May 2022", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Lukas Staniszewski", "co": "Coinbase", "p": "Director of Product", "u": "https://www.linkedin.com/in/lukas-staniszewski-b1154340", "dt": "29 Apr 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Sam Reidt", "co": "Meta", "p": "Product Manager", "u": "https://www.linkedin.com/in/sam-reidt-1aa8b6126", "dt": "28 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Alon Alhadef", "co": "Wix.com", "p": "Product Manager", "u": "https://www.linkedin.com/in/alon-alhadef-307629134", "dt": "24 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Christina Gee", "co": "Stripe", "p": "Product Manager", "u": "https://www.linkedin.com/in/geechristina", "dt": "22 Apr 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Thomas Kuo", "co": "Unity", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/thkuo94", "dt": "21 Apr 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Chloe Chow", "co": "Square", "p": "Product Manager", "u": "https://www.linkedin.com/in/chowchloe", "dt": "21 Apr 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Barry Eom", "co": "Datadog", "p": "Product Manager", "u": "https://www.linkedin.com/in/barium56", "dt": "21 Apr 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Daniel Layfield", "co": "Diligent", "p": "Director of Product Management", "u": "https://www.linkedin.com/in/layfield", "dt": "21 Apr 2022", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jojo Ramirez", "co": "Netflix", "p": "Product Lead, Growth & Monetization", "u": "https://www.linkedin.com/in/jojoramirez", "dt": "20 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Serena Jiao", "co": "TikTok", "p": "Senior Product Manager, Ads Identity", "u": "https://www.linkedin.com/in/serena-jiao-b85b99149", "dt": "20 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Marc Devens", "co": "Twilio", "p": "Staff Product Manager", "u": "https://www.linkedin.com/in/marcdevens", "dt": "20 Apr 2022", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Joseph Alvarez", "co": "Etsy", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/joseph-alvrz", "dt": "20 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Gagan Gupta", "co": "DoorDash", "p": "Product Lead", "u": "https://www.linkedin.com/in/gagan-gupta-94414645", "dt": "20 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Khanh Pham", "co": "Etsy", "p": "Product Manager", "u": "https://www.linkedin.com/in/phamkhanh", "dt": "20 Apr 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Folasade Ologundudu", "co": "Essence Communications Inc.", "p": "Contributing Writer", "u": "https://www.linkedin.com/in/folasade-ologundudu-70b5693", "dt": "24 Mar 2022", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Connie Chen, MBA", "co": "Meta", "p": "Global Product Social, Meta AI (Content Studio)", "u": "https://www.linkedin.com/in/conniechen", "dt": "31 Jan 2022", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Rachel R", "co": "Platinum Square Real Estate", "p": "real esate investment manager", "u": "https://www.linkedin.com/in/rachel-r-051875221", "dt": "22 Dec 2021", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Frances Kronenberg", "co": "New York Medical College", "p": "MD Candidate", "u": "https://www.linkedin.com/in/frances-kronenberg-97a530226", "dt": "24 Nov 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Manon Scotto d'anielo", "co": "Catawiki", "p": "Key Account Manager", "u": "https://www.linkedin.com/in/manon-scotto-d-anielo-642ba0101", "dt": "24 Nov 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Kevin Xiong", "co": "J.P. Morgan Wealth Management", "p": "Vice President & Wealth Advisor", "u": "https://www.linkedin.com/in/kevinhxiong", "dt": "04 Oct 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Nicole Benincasa", "co": "Uber", "p": "Senior Counsel, Regulatory, Mobility & Delivery", "u": "https://www.linkedin.com/in/nicolebenincasa", "dt": "15 Sep 2021", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Adrienne Ebbert", "co": "Goodwill Industries of Greater New York and Northern New Jersey", "p": "Director of Accounting Operations", "u": "https://www.linkedin.com/in/adrienne-ebbert-7ba36a5b", "dt": "14 Sep 2021", "s": null, "rm": true, "sc": 2}, {"n": "Katie Vida", "co": "Doctolib", "p": "User Research Operations Manager", "u": "https://www.linkedin.com/in/katie-vida", "dt": "31 Aug 2021", "s": null, "rm": true, "sc": 2}, {"n": "Adi Ben-Ari", "co": "Applied Blockchain", "p": "Founder / CEO", "u": "https://www.linkedin.com/in/adibenari", "dt": "16 Aug 2021", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Katarina\ufeff\ufeff Batina\ufeff\ufeff", "co": "Shopify", "p": "Design Director, Shop & Advertising", "u": "https://www.linkedin.com/in/katarina%EF%BB%BF%EF%BB%BFbatina", "dt": "28 Jul 2021", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Imogen Prus", "co": "Diligent", "p": "Senior ESG Solutions Engineer", "u": "https://www.linkedin.com/in/imogen-prus-050023bb", "dt": "26 Jul 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Emily Anghel", "co": "Netflix", "p": "Talent Coordinator", "u": "https://www.linkedin.com/in/emanghel", "dt": "25 Jul 2021", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Yiting Li", "co": "TikTok", "p": "Product Manager", "u": "https://www.linkedin.com/in/yiting-li-product", "dt": "23 Jul 2021", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Madeleine Boucher", "co": "Spotify", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/madeleine-boucher", "dt": "19 Jul 2021", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Tenzin Dhondup", "co": "Block Renovation", "p": "Senior Account Executive", "u": "https://www.linkedin.com/in/tenzind1", "dt": "09 Jul 2021", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Maria Alessandra Castillo", "co": "Valon", "p": "Senior Manager, Delinquency Business Operations", "u": "https://www.linkedin.com/in/maria-alessandra-castillo", "dt": "08 Jul 2021", "s": null, "rm": true, "sc": 2}, {"n": "Randy Hunt", "co": "Notion", "p": "Head of Design", "u": "https://www.linkedin.com/in/randyjhunt", "dt": "08 Jul 2021", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Allison Bohr", "co": "Artsy", "p": "Sales Operations Lead", "u": "https://www.linkedin.com/in/allison-b-010a31113", "dt": "07 Jul 2021", "s": null, "rm": true, "sc": 2}, {"n": "Nicole Shaub", "co": "Snap Inc.", "p": "Platform Partnerships Lead", "u": "https://www.linkedin.com/in/nicole-shaub-96644493", "dt": "07 Jul 2021", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Dagmar Kutz", "co": "Volkswagen AG", "p": "Produktmanager", "u": "https://www.linkedin.com/in/dagmar-kutz-8a1118143", "dt": "13 Jun 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jenn Pratt \u767d\u5fc3\u6021", "co": "Art Dubai", "p": "General Manager", "u": "https://www.linkedin.com/in/jennpratthk", "dt": "27 May 2021", "s": null, "rm": true, "sc": 2}, {"n": "Anna Blaha", "co": "Betterment", "p": "Risk Operations Associate", "u": "https://www.linkedin.com/in/anna-j-blaha", "dt": "10 May 2021", "s": null, "rm": true, "sc": 2}, {"n": "Chloe Spitalny", "co": "Guggenheim, Asher Associates", "p": "Director", "u": "https://www.linkedin.com/in/chloe-spitalny-321b55190", "dt": "01 Apr 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Matilde Paisana", "co": "base agency", "p": "Head of Key Accounts", "u": "https://www.linkedin.com/in/matilde-paisana", "dt": "22 Feb 2021", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jana Brooks Vigil", "co": "Artsy", "p": "Business Strategy and Operations Lead", "u": "https://www.linkedin.com/in/jana-brooks-vigil-29172a49", "dt": "20 Feb 2021", "s": null, "rm": true, "sc": 2}, {"n": "Erica Lyon", "co": "Artsy", "p": "Director, Business Strategy and Operations", "u": "https://www.linkedin.com/in/erica-lyon", "dt": "20 Feb 2021", "s": null, "rm": true, "sc": 2}, {"n": "Lauryn Lawrence", "co": "Museum of Art and Design Miami Dade College", "p": "Visitor Relations Coordinator", "u": "https://www.linkedin.com/in/lauryn-lawrence-bbb607170", "dt": "19 Dec 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Andrew Boos", "co": "Artsy", "p": "Senior Director Marketplace Strategy and Operations", "u": "https://www.linkedin.com/in/andrew-boos-4167aa114", "dt": "19 Dec 2020", "s": null, "rm": true, "sc": 2}, {"n": "Nicole Stengel Restaino", "co": "The College Board", "p": "Director, Market Development and Project Management", "u": "https://www.linkedin.com/in/nicolesrestaino", "dt": "28 Nov 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Juhi Palat", "co": "Velo3D", "p": "Director of Sales Operations", "u": "https://www.linkedin.com/in/juhipalat", "dt": "10 Nov 2020", "s": null, "rm": true, "sc": 2}, {"n": "Alexander Mann Turner", "co": "Daryl Roth Theatrical Management", "p": "Assistant Company Manager", "u": "https://www.linkedin.com/in/lexeetee", "dt": "07 Oct 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Idil Kara", "co": "RepRally", "p": "Operations", "u": "https://www.linkedin.com/in/idil-kara", "dt": "07 Oct 2020", "s": null, "rm": true, "sc": 2}, {"n": "Timour Kosters", "co": "Edge City", "p": "Co-Founder", "u": "https://www.linkedin.com/in/timkosters", "dt": "23 Jul 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Morgan Wynne", "co": "Global Citizen", "p": "Senior Director of Audience Strategy", "u": "https://www.linkedin.com/in/morganbwynne", "dt": "14 Jul 2020", "s": null, "rm": true, "sc": 2}, {"n": "Sarah Shelburne", "co": "eBay", "p": "Live Category Manager for Apparel", "u": "https://www.linkedin.com/in/sarah-shelburne-38497b31", "dt": "11 Jul 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Yasmine Fazeli", "co": "Shopify", "p": "Lead Account Executive - Large Accounts", "u": "https://www.linkedin.com/in/yasmine-fazeli-8999a9126", "dt": "04 Jul 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Gary Valleau", "co": "Salesforce", "p": "Account Executive", "u": "https://www.linkedin.com/in/gary-v-0649391a", "dt": "27 Jun 2020", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Camille Vazquez-Reyes", "co": "Etsy", "p": "Senior Manager, Community & Events", "u": "https://www.linkedin.com/in/camille-vr", "dt": "22 Jun 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Samantha Rogel", "co": "The Athenian Seafood Restaurant & Bar", "p": "Director of Operations", "u": "https://www.linkedin.com/in/samantha-rogel-100a0b46", "dt": "20 Jun 2020", "s": null, "rm": true, "sc": 2}, {"n": "Emily Kappes", "co": "Accenture", "p": "Senior Strategy Consultant", "u": "https://www.linkedin.com/in/emilykappes", "dt": "08 Jun 2020", "s": null, "rm": true, "sc": 2}, {"n": "Liz Luna", "co": "New_ Public", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/lizluna", "dt": "10 May 2020", "s": null, "rm": true, "sc": 2}, {"n": "Elisa Colombani", "co": "Hinge", "p": "VP, HR", "u": "https://www.linkedin.com/in/elisacolombani", "dt": "27 Apr 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Johanna Beyenbach", "co": "CookUnity", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/jbeyenbach", "dt": "26 Apr 2020", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Sarah Weir", "co": "Hinge", "p": "Senior Director of Engineering", "u": "https://www.linkedin.com/in/sweir27", "dt": "22 Apr 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Mohamed Hamid", "co": "Palit", "p": "Operations Lead", "u": "https://www.linkedin.com/in/mohamed-hamid-90298116b", "dt": "11 Apr 2020", "s": null, "rm": true, "sc": 2}, {"n": "Wendy Wiberg", "co": "Artsy", "p": "Director, Marketplace Strategy & Operations", "u": "https://www.linkedin.com/in/wendy-wiberg-574207132", "dt": "11 Apr 2020", "s": null, "rm": true, "sc": 2}, {"n": "Arielle Cohen", "co": "Fort Lewis College", "p": "Collections & E-Resources Librarian", "u": "https://www.linkedin.com/in/arielle-cohen", "dt": "27 Mar 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Matt Domino", "co": "BiggerPockets", "p": "Head of Audience", "u": "https://www.linkedin.com/in/matt-domino-a1a1916", "dt": "27 Mar 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Sophie Salamon", "co": "Artsy", "p": "Finance and Operations Manager", "u": "https://www.linkedin.com/in/sophie-salamon-2a162343", "dt": "26 Mar 2020", "s": null, "rm": true, "sc": 2}, {"n": "Katherine O'Connor", "co": "Artsy", "p": "People Operations Lead", "u": "https://www.linkedin.com/in/katherine-o-connor-25817811", "dt": "25 Mar 2020", "s": null, "rm": true, "sc": 2}, {"n": "Julie Rich", "co": "Normative.io", "p": "Revenue Operations Manager", "u": "https://www.linkedin.com/in/richjulie", "dt": "23 Mar 2020", "s": null, "rm": true, "sc": 2}, {"n": "Leslie (Jacoby) Hack", "co": "eBay", "p": "Senior Category Manager, US Toys", "u": "https://www.linkedin.com/in/lesliewjacoby", "dt": "23 Mar 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Rebecca Tribble", "co": "Fyxer", "p": "GTM Marketing Lead", "u": "https://www.linkedin.com/in/rebecca-tribble", "dt": "23 Mar 2020", "s": null, "rm": true, "sc": 2}, {"n": "Kate Pickering", "co": "Kate Pickering Consulting", "p": "Digital Marketing and Business Strategy Consultant", "u": "https://www.linkedin.com/in/kate-pickering", "dt": "22 Mar 2020", "s": null, "rm": true, "sc": 2}, {"n": "Andi Platt", "co": "Rippling", "p": "Account Executive", "u": "https://www.linkedin.com/in/andi-platt", "dt": "21 Mar 2020", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Eleonora Leo", "co": "Studio Legale Metta", "p": "Project & Digital Operations Manager", "u": "https://www.linkedin.com/in/eleonora-leo-", "dt": "21 Mar 2020", "s": null, "rm": true, "sc": 2}, {"n": "Clark Halpern", "co": "Wageningen University & Research", "p": "PHD Candidate", "u": "https://www.linkedin.com/in/clark-halpern", "dt": "01 Mar 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Gavin D. Pak", "co": "David Geffen School of Drama at Yale", "p": "Assistant Director of Development & Alumni Affairs", "u": "https://www.linkedin.com/in/gavindpak", "dt": "11 Feb 2020", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Michelle Kim", "co": "Free Arts NYC", "p": "Development Operations Manager", "u": "https://www.linkedin.com/in/michellelaurenkim", "dt": "04 Feb 2020", "s": null, "rm": true, "sc": 2}, {"n": "Melanie Borinstein", "co": "Morning Consult", "p": "Senior Program Manager", "u": "https://www.linkedin.com/in/melanie-borinstein-9b144262", "dt": "06 Jan 2020", "s": null, "rm": true, "sc": 2}, {"n": "Artyom Astafurov", "co": "Shopify", "p": "Member of Technical Staff", "u": "https://www.linkedin.com/in/astaff", "dt": "01 Jan 2020", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Becca Starr Gordon", "co": "Sotheby's", "p": "SVP, Head of Business Operations and Strategy, GFA", "u": "https://www.linkedin.com/in/becca-starr", "dt": "27 Dec 2019", "s": null, "rm": true, "sc": 2}, {"n": "Brittney Gwynn", "co": "Various Startups", "p": "Fractional Senior Product Manager & Operations Lead", "u": "https://www.linkedin.com/in/bgwynn", "dt": "13 Dec 2019", "s": null, "rm": true, "sc": 2}, {"n": "Ashley Keating", "co": "Sage", "p": "Head of Growth Marketing", "u": "https://www.linkedin.com/in/ashleyk", "dt": "05 Dec 2019", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ashkan Nasseri", "co": "Spotify", "p": "Engineering Manager", "u": "https://www.linkedin.com/in/ashkan-nasseri-495b463", "dt": "28 Nov 2019", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Stas Johnson-Chyzhykov", "co": "Rho", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/stasjc", "dt": "22 Nov 2019", "s": null, "rm": true, "sc": 2}, {"n": "Samuel Rozenberg", "co": "Hinge", "p": "SVP Engineering", "u": "https://www.linkedin.com/in/rozenberg", "dt": "22 Nov 2019", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Catherine Finsness", "co": "MERGE", "p": "Senior Adobe Strategist", "u": "https://www.linkedin.com/in/cfinsness", "dt": "20 Nov 2019", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Erin Alexander", "co": "Spotify", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/erin-alexander-65a76059", "dt": "18 Nov 2019", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Lansing Moore Jr.", "co": "Goldman Sachs", "p": "Email Marketing Technical Program Manager", "u": "https://www.linkedin.com/in/lansing-moore-jr-0173639", "dt": "16 Nov 2019", "s": null, "rm": true, "sc": 2}, {"n": "Perry Weber", "co": "Ramp", "p": "Channel Partner Manager", "u": "https://www.linkedin.com/in/perryweber", "dt": "30 Oct 2019", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Lara Day", "co": "eBay Deutschland", "p": "Head of eBay Live Germany", "u": "https://www.linkedin.com/in/lara-day", "dt": "04 Sep 2019", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Vasilisa Sokolova", "co": "Uber", "p": "Product Manager", "u": "https://www.linkedin.com/in/vasilisa-a-sokolova", "dt": "21 Jul 2019", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Evan Calzolaio", "co": "Meta", "p": "Data Engineer", "u": "https://www.linkedin.com/in/evcalzo", "dt": "17 Jul 2019", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Leonardo Restrepo", "co": "Postsecondary Education & Economics Research (PEER) Center", "p": "Graduate Research Assistant", "u": "https://www.linkedin.com/in/leonardo-restrepo-a93566155", "dt": "14 Dec 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Nicholas Sidoran", "co": "Open Table United Methodist Church", "p": "Minister Of Music", "u": "https://www.linkedin.com/in/nicholassidoran", "dt": "19 Nov 2018", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Amanda Tucker", "co": "Netflix", "p": "Manager - Production Finance- Original Studio Film", "u": "https://www.linkedin.com/in/amanda-tucker-bb50b145", "dt": "03 Oct 2018", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Kunal Goyal", "co": "Aquatic Capital Management", "p": "Quantitative Researcher", "u": "https://www.linkedin.com/in/kunal-goyal-52a28b94", "dt": "06 Sep 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Chase Packard", "co": "Marathon Management Partners", "p": "Founding Partner", "u": "https://www.linkedin.com/in/chasepackard", "dt": "07 Aug 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Robert Godfried", "co": "Maryland Department of Service and Civic Innovation", "p": "Program Manager, Maryland Climate Corps", "u": "https://www.linkedin.com/in/robert-godfried-7b063bbb", "dt": "27 Jul 2018", "s": null, "rm": true, "sc": 2}, {"n": "Charlie Law", "co": "Genesis One Capital", "p": "Founding Partner", "u": "https://www.linkedin.com/in/charlie-law-904792149", "dt": "20 Jul 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Sharon Chen", "co": "Google", "p": "Product Strategy and Operations Manager", "u": "https://www.linkedin.com/in/sharonchen0510", "dt": "21 Jun 2018", "s": null, "rm": true, "sc": 2}, {"n": "August Culbert", "co": "Cleveland Clinic Lerner College of Medicine", "p": "Medical Student", "u": "https://www.linkedin.com/in/augustculbert", "dt": "21 Jun 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Bella Bagatelos", "co": "Fourth Wall Management", "p": "Director of Development", "u": "https://www.linkedin.com/in/bella-bagatelos", "dt": "27 Mar 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ariane Ayer", "co": "Regeneron Pharmaceuticals, Inc.", "p": "Computational Genetics Analyst", "u": "https://www.linkedin.com/in/arianeayer", "dt": "20 Mar 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jae Ahn", "co": "Greenland Capital Management LP", "p": "Analyst", "u": "https://www.linkedin.com/in/jae-ahn-9ba810138", "dt": "13 Mar 2018", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Richard L\u00f3pez", "co": "Flex", "p": "BizOps & Partnerships", "u": "https://www.linkedin.com/in/richard-santiago-l%C3%B3pez", "dt": "03 Feb 2018", "s": null, "rm": true, "sc": 2}, {"n": "Vickram Gidwani", "co": "Meta", "p": "Neural Interfaces Engineer", "u": "https://www.linkedin.com/in/vickram-gidwani-6403a8b4", "dt": "30 Jan 2018", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Yoo Joon Kim", "co": "Yext", "p": "GTM Strategy & Operations", "u": "https://www.linkedin.com/in/yoojoonkim", "dt": "19 Jan 2018", "s": null, "rm": true, "sc": 2}, {"n": "Oluwatobiloba Oluwalana", "co": "Accenture", "p": "Strategy Consultant", "u": "https://www.linkedin.com/in/oluwatobiloba-oluwalana-6b1017142", "dt": "19 Jan 2018", "s": null, "rm": true, "sc": 2}, {"n": "Alex Whitmore", "co": "Parrasch Heijnen Gallery", "p": "Head Of Operations", "u": "https://www.linkedin.com/in/alex-whitmore", "dt": "07 Jan 2018", "s": null, "rm": true, "sc": 2}, {"n": "Catherine Cervone", "co": "United States Court of Appeals for the Third Circuit", "p": "Law Clerk", "u": "https://www.linkedin.com/in/catherine-cervone-22592777", "dt": "05 Dec 2017", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Jonathan Morris", "co": "Magnolia Bakery", "p": "Supply Chain Manager - Sales & Operations", "u": "https://www.linkedin.com/in/jonathan-morris-14150", "dt": "10 Nov 2017", "s": null, "rm": true, "sc": 2}, {"n": "Serena Cervantes", "co": "Panorama Education", "p": "Senior Account Manager", "u": "https://www.linkedin.com/in/serena-cervantes-488341a7", "dt": "07 Nov 2017", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Max Grad", "co": "Antigravity Academy", "p": "MBA Strategy Intern", "u": "https://www.linkedin.com/in/maxwgrad", "dt": "12 Oct 2017", "s": null, "rm": true, "sc": 2}, {"n": "Grant Kushner", "co": "OneImaging", "p": "Chief of Staff", "u": "https://www.linkedin.com/in/grantkushner", "dt": "24 Sep 2017", "s": null, "rm": true, "sc": 2}, {"n": "Stephen Yu", "co": "Ares Management Corporation", "p": "Vice President", "u": "https://www.linkedin.com/in/stephen-yu-8a39666a", "dt": "21 Sep 2017", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Danny Zhang", "co": "Munger, Tolles & Olson LLP", "p": "Associate", "u": "https://www.linkedin.com/in/dannyzhang1", "dt": "09 Sep 2017", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Nadeen Issa", "co": "American Express", "p": "Manager, Strategy and Transformation", "u": "https://www.linkedin.com/in/nadeenissa", "dt": "05 Aug 2017", "s": null, "rm": true, "sc": 2}, {"n": "Jonathan Abrams", "co": "Grand Slam Ventures LLC", "p": "Head of Business Operations", "u": "https://www.linkedin.com/in/jonathan-abrams513", "dt": "05 Aug 2017", "s": null, "rm": true, "sc": 2}, {"n": "Kassim Husain", "co": "Jake Levine for Congress", "p": "Policy & Strategy Advisor", "u": "https://www.linkedin.com/in/kassimhusain", "dt": "07 Jun 2017", "s": null, "rm": true, "sc": 2}, {"n": "Rachael Alfant, PhD", "co": "Sandia National Laboratories", "p": "Postdoctoral Appointee - Optimization & Operations Research", "u": "https://www.linkedin.com/in/rachael-alfant", "dt": "11 May 2017", "s": null, "rm": true, "sc": 2}, {"n": "Miguel Lora", "co": "RUNR", "p": "Chief Operating Officer", "u": "https://www.linkedin.com/in/miguel-lora-23102492", "dt": "31 Mar 2017", "s": null, "rm": true, "sc": 2}, {"n": "Rubin Soodak", "co": "Fred Rogers Productions", "p": "Interactive Producer", "u": "https://www.linkedin.com/in/rubinsoodak", "dt": "17 Jan 2017", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Michael Stier", "co": "What If Media Group", "p": "Director of Site Strategy", "u": "https://www.linkedin.com/in/michael-stier", "dt": "19 Dec 2016", "s": null, "rm": true, "sc": 2}, {"n": "Fabian Damm", "co": "Microsoft", "p": "Senior Manager, Gaming Strategy", "u": "https://www.linkedin.com/in/fabiandamm", "dt": "12 Nov 2016", "s": null, "rm": true, "sc": 2}, {"n": "Justin Jia, MD MS", "co": "Mass General Brigham", "p": "Resident Physician", "u": "https://www.linkedin.com/in/justin-jia-md-ms-173b48128", "dt": "02 Nov 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Emily Kramer", "co": "Hanover Park", "p": "Founding Head of Strategy and Operations", "u": "https://www.linkedin.com/in/emily-j-kramer", "dt": "12 Oct 2016", "s": null, "rm": true, "sc": 2}, {"n": "Ana Lenskiy", "co": "VMGROUPE", "p": "Account Director, Strategy & Communications", "u": "https://www.linkedin.com/in/ana-lenskiy-aa242975", "dt": "13 Sep 2016", "s": null, "rm": true, "sc": 2}, {"n": "Samantha Neal", "co": "Office of the New York State Attorney General", "p": "Assistant Solicitor General", "u": "https://www.linkedin.com/in/nealsamantha", "dt": "13 Sep 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jeremy Pushkin", "co": "Harvey", "p": "Applied Legal Researcher", "u": "https://www.linkedin.com/in/jeremypushkin", "dt": "12 Sep 2016", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Adam Bulow", "co": "Pigeon (YC W23)", "p": "CEO & Co-Founder", "u": "https://www.linkedin.com/in/adam-bulow", "dt": "02 Sep 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Samara Rusakow", "co": "Huel", "p": "Strategy Manager", "u": "https://www.linkedin.com/in/samara-rusakow-343738b4", "dt": "06 Aug 2016", "s": null, "rm": true, "sc": 2}, {"n": "Hillary Winnick", "co": "Ralph Lauren", "p": "Wholesale Digital Strategy, Business Development, & Home Manager - North America", "u": "https://www.linkedin.com/in/hillary-winnick-b44a52a9", "dt": "22 Jun 2016", "s": null, "rm": true, "sc": 2}, {"n": "Rahil Mathur", "co": "Tiger Global Management", "p": "Quant Research & Data Science", "u": "https://www.linkedin.com/in/rahilmathur", "dt": "16 May 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Joe Balich", "co": "HCI Lab", "p": "Principal Consultant \u2014 Product Design, AI & Technology Strategy", "u": "https://www.linkedin.com/in/joebalich", "dt": "10 May 2016", "s": null, "rm": true, "sc": 2}, {"n": "Saeri Sakai", "co": "Yappli", "p": "Corporate Strategy", "u": "https://www.linkedin.com/in/saeri-sakai-742b25a3", "dt": "09 May 2016", "s": null, "rm": true, "sc": 2}, {"n": "Tanvi Agrawal", "co": "UCLA Anderson School of Management", "p": "VP, Emerging Technology \u2013 Tech Business Association (AnderTech)", "u": "https://www.linkedin.com/in/tanvi-agrawal-ucla", "dt": "26 Mar 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Will Welland", "co": "Pulley", "p": "Business Operations", "u": "https://www.linkedin.com/in/willwelland", "dt": "24 Feb 2016", "s": null, "rm": true, "sc": 2}, {"n": "Hamilton Anstead", "co": "DP World", "p": "Strategy Analyst - Global Contract Logistics", "u": "https://www.linkedin.com/in/hamilton-anstead-06b372114", "dt": "16 Feb 2016", "s": null, "rm": true, "sc": 2}, {"n": "Jeremy Rodriguez", "co": "Legi Avocats", "p": "Global Legal Practice Fellow", "u": "https://www.linkedin.com/in/jeremy-rodriguez-386482b0", "dt": "28 Jan 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Kyle Lee", "co": "APG Asset Management", "p": "Assistant Portfolio Manager", "u": "https://www.linkedin.com/in/kyle-lee-6863a890", "dt": "11 Jan 2016", "s": "physical_world", "rm": false, "sc": 2}, {"n": "hannah fink", "co": "Zeno Group", "p": "Vice President, Strategy & Planning", "u": "https://www.linkedin.com/in/hanfink", "dt": "25 Dec 2015", "s": null, "rm": true, "sc": 2}, {"n": "Chieh-Ming (Ben) Hsu", "co": "Groombridge, Wu, Baughman & Stone LLP", "p": "Associate", "u": "https://www.linkedin.com/in/cm-hsu", "dt": "09 Dec 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Hannah Jaffe Walter", "co": "Parabilis Medicines", "p": "Chief of Staff to CEO", "u": "https://www.linkedin.com/in/hannah-jaffe-walter", "dt": "04 Dec 2015", "s": null, "rm": true, "sc": 2}, {"n": "Oliver Xie", "co": "AQR Capital Management", "p": "Research Analyst", "u": "https://www.linkedin.com/in/oliver-xie-19061194", "dt": "15 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Rachel Trebach", "co": "Spotify", "p": "CRM Manager", "u": "https://www.linkedin.com/in/rachel-trebach-a4167b108", "dt": "15 Nov 2015", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Wallace Cotton", "co": "Agency Landscape + Planning", "p": "Urban Planner", "u": "https://www.linkedin.com/in/wallace-cotton-418186aa", "dt": "14 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Brenton Desai", "co": "OZO Coffee Roasters", "p": "General Manager", "u": "https://www.linkedin.com/in/brenton-desai-2087a4b0", "dt": "11 Nov 2015", "s": null, "rm": true, "sc": 2}, {"n": "Ayesha Saksena", "co": "Meta", "p": "Product Manager | Reality Labs", "u": "https://www.linkedin.com/in/ayeshasaksena", "dt": "10 Nov 2015", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Caroline House", "co": "Hunter College", "p": "Adjunct Instructor", "u": "https://www.linkedin.com/in/caroline-house-b7a78999", "dt": "10 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Jillian Karson", "co": "Bridgewater Associates", "p": "Manager, Culture and Talent", "u": "https://www.linkedin.com/in/jillian-eisenberg-39072", "dt": "09 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Adrian Carlsson", "co": "Credit Key", "p": "VP, Operations", "u": "https://www.linkedin.com/in/adrian-carlsson", "dt": "07 Nov 2015", "s": null, "rm": true, "sc": 2}, {"n": "Carly Amon", "co": "Massachusetts General Hospital", "p": "Surgery Resident", "u": "https://www.linkedin.com/in/carly-amon-405711100", "dt": "06 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Patrick Quinn", "co": "McMaster-Carr", "p": "Strategy & Operations Manager, Distribution", "u": "https://www.linkedin.com/in/patrickmarstonquinn", "dt": "06 Nov 2015", "s": null, "rm": true, "sc": 2}, {"n": "Daniel Glass", "co": "Ramp", "p": "Senior ISV Partner Manager", "u": "https://www.linkedin.com/in/daniel-glass-3a7398b8", "dt": "05 Nov 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Deborah Leffell", "co": "United States Court of Appeals for the Sixth Circuit", "p": "Judicial Law Clerk", "u": "https://www.linkedin.com/in/deborahjleffell", "dt": "05 Nov 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Joshua Silver", "co": "US Environmental Protection Agency (EPA)", "p": "Environmental Policy Analyst", "u": "https://www.linkedin.com/in/joshua-silver", "dt": "04 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Frederic Liegl", "co": "One Investment Management", "p": "Managing Director", "u": "https://www.linkedin.com/in/frederic-liegl-20a34068", "dt": "03 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Lauren Daurizio, M.S.", "co": "ICF", "p": "Operations Specialist - Utility Programs and Services", "u": "https://www.linkedin.com/in/lauren-d-284647a1", "dt": "03 Nov 2015", "s": null, "rm": true, "sc": 2}, {"n": "Owen Elliott", "co": "Palantir Technologies", "p": "Product Manager", "u": "https://www.linkedin.com/in/owen-elliott-4baa38aa", "dt": "03 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Nathan Decety", "co": "Accenture", "p": "Strategy Manager", "u": "https://www.linkedin.com/in/nathan-decety-782b9273", "dt": "02 Nov 2015", "s": null, "rm": true, "sc": 2}, {"n": "Danielle Bella Kalender", "co": "Booz Allen Hamilton", "p": "Lead | National Security Sector", "u": "https://www.linkedin.com/in/danielle-bella-k-33b72643", "dt": "01 Nov 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Howard Chung", "co": "The Port Authority of New York & New Jersey", "p": "Principal Operations Planning Analyst", "u": "https://www.linkedin.com/in/hwdchg13", "dt": "01 Nov 2015", "s": null, "rm": true, "sc": 2}, {"n": "Teddy Watler", "co": "United States Court of Appeals for the Ninth Circuit", "p": "Judicial Law Clerk", "u": "https://www.linkedin.com/in/teddy-watler-651475b0", "dt": "01 Nov 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Gil Bao", "co": "Helio Genomics", "p": "Vice President, Finance", "u": "https://www.linkedin.com/in/gil-b-111ba761", "dt": "27 Oct 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Alexandra Nadel", "co": "Bitwise Asset Management", "p": "Associate Director, Business Development, Onchain Solutions", "u": "https://www.linkedin.com/in/alexandra-nadel-569816100", "dt": "24 Oct 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Nathan Raab", "co": "The Supreme Court of the United States", "p": "Law Clerk", "u": "https://www.linkedin.com/in/nathan-raab-aab215a9", "dt": "23 Oct 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Lauren Feldman", "co": "Meta", "p": "UX Researcher", "u": "https://www.linkedin.com/in/lauren-d-feldman", "dt": "22 Oct 2015", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Jonathan Khosa", "co": "UBS", "p": "Wealth Strategy Associate", "u": "https://www.linkedin.com/in/jonathan-khosa", "dt": "13 Oct 2015", "s": null, "rm": true, "sc": 2}, {"n": "Oliviero Figus", "co": "Accenture", "p": "Technology Strategy Senior Manager", "u": "https://www.linkedin.com/in/olivierofigus", "dt": "06 Oct 2015", "s": null, "rm": true, "sc": 2}, {"n": "Diego Montemayor", "co": "Reform", "p": "Chief of Staff", "u": "https://www.linkedin.com/in/diego-montemayor-812335a5", "dt": "24 Sep 2015", "s": null, "rm": true, "sc": 2}, {"n": "Diana Li, PMP", "co": "General Atlantic", "p": "Senior Director", "u": "https://www.linkedin.com/in/diana-li-pmp-b4b48488", "dt": "09 Sep 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Chirag Sachar, PhD", "co": "Novartis", "p": "Director, Therapeutic Area Strategy", "u": "https://www.linkedin.com/in/chirag-sachar-phd-26107ba9", "dt": "20 Aug 2015", "s": null, "rm": true, "sc": 2}, {"n": "Nicolas Zuleta", "co": "CookUnity", "p": "Expansion", "u": "https://www.linkedin.com/in/nicolaszuleta", "dt": "20 Aug 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Mark Levine, MD, MA", "co": "Mass General Brigham", "p": "Clinical Fellow, Neuromuscular Medicine", "u": "https://www.linkedin.com/in/mark-levine-md-ma-721b5751", "dt": "14 Aug 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Kyle Lutnick", "co": "Cantor Fitzgerald", "p": "Executive Vice Chairman", "u": "https://www.linkedin.com/in/kyle-lutnick", "dt": "13 Aug 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Vishaan Nursey", "co": "Bigelow Laboratory for Ocean Sciences", "p": "Research Associate", "u": "https://www.linkedin.com/in/vishaan-nursey-8a7382b2", "dt": "11 Aug 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Juliette Hautemont", "co": "Dayin", "p": "Head of Operations & Business Development", "u": "https://www.linkedin.com/in/jhautemont", "dt": "05 Aug 2015", "s": null, "rm": true, "sc": 2}, {"n": "Lily Ting", "co": "Bank of America", "p": "Vice President, GenAI Product Mgmt, Strategy & Design", "u": "https://www.linkedin.com/in/lily-ting-lt", "dt": "05 Aug 2015", "s": null, "rm": true, "sc": 2}, {"n": "Chase Wilson", "co": "Figma", "p": "Director, AI & Developer Marketing", "u": "https://www.linkedin.com/in/chasecwilson", "dt": "04 Aug 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Vivianna Lin", "co": "King Street Capital Management", "p": "Real Estate Investor", "u": "https://www.linkedin.com/in/viviannalin", "dt": "04 Aug 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "David Tong", "co": "Humana", "p": "Strategy Advisor", "u": "https://www.linkedin.com/in/dtong101", "dt": "03 Aug 2015", "s": null, "rm": true, "sc": 2}, {"n": "Marissa Weber", "co": "Meta", "p": "Client Solutions Manager", "u": "https://www.linkedin.com/in/marissaweber", "dt": "03 Aug 2015", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "William Stern", "co": "Chime", "p": "Senior Product Manager", "u": "https://www.linkedin.com/in/william-stern-22bb9a84", "dt": "03 Aug 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Simone Tess Aisiks", "co": "Stealth Startup", "p": "Strategy", "u": "https://www.linkedin.com/in/simonetessaisiks", "dt": "02 Aug 2015", "s": null, "rm": true, "sc": 2}, {"n": "Riley Heiman", "co": "Meritage Group LP", "p": "Vice President, Private Equity", "u": "https://www.linkedin.com/in/riley-heiman-386b73b5", "dt": "30 Jul 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Kanisha Williams", "co": "Music Will", "p": "Sr. Coordinator, Workshop Operations", "u": "https://www.linkedin.com/in/kanishawilliams", "dt": "30 Jul 2015", "s": null, "rm": true, "sc": 2}, {"n": "Diego Loyo Rosales", "co": "Mastercard", "p": "Strategy & Transformation Associate Managing Consultant", "u": "https://www.linkedin.com/in/dloyorosales", "dt": "20 Jul 2015", "s": null, "rm": true, "sc": 2}, {"n": "John Arvanitis", "co": "SLDR Burger Bar", "p": "Founder", "u": "https://www.linkedin.com/in/akillezz", "dt": "05 Jul 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Paul Papoutsis", "co": "Ares Management Corporation", "p": "Senior Associate", "u": "https://www.linkedin.com/in/paulpapoutsis", "dt": "17 Jun 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ivan Liu", "co": "Medical College of Georgia at Augusta University", "p": "Medical Student", "u": "https://www.linkedin.com/in/ivanzliu", "dt": "08 Jun 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Adam Lee (DongJae)", "co": "General Atlantic", "p": "Associate", "u": "https://www.linkedin.com/in/adjlee", "dt": "02 Jun 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Finn Vigeland, AICP", "co": "Foursquare Integrated Transportation Planning", "p": "Project Manager and Senior Transportation Planner", "u": "https://www.linkedin.com/in/finnvigeland", "dt": "28 May 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Colton Smith", "co": "AngelList", "p": "Venture", "u": "https://www.linkedin.com/in/colton-thomas-smith", "dt": "27 May 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Andrew Schwartz", "co": "Guggenheim Securities", "p": "Incoming Investment Banking Associate", "u": "https://www.linkedin.com/in/andrew-schwartz-celent", "dt": "27 May 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Belle Etra Yoeli", "co": "American Jewish Committee (AJC)", "p": "Chief Strategy and Communications Officer", "u": "https://www.linkedin.com/in/belle-etra-yoeli-b3312054", "dt": "13 May 2015", "s": null, "rm": true, "sc": 2}, {"n": "Ambika Acharya", "co": "Brex", "p": "Product", "u": "https://www.linkedin.com/in/ambika-acharya", "dt": "29 Apr 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Kevin Moy", "co": "Seer Partners", "p": "General Manager", "u": "https://www.linkedin.com/in/moykevin", "dt": "03 Mar 2015", "s": null, "rm": true, "sc": 2}, {"n": "Emma Akari Smith", "co": "Stripe", "p": "Product Manager", "u": "https://www.linkedin.com/in/emmaakarismith", "dt": "03 Mar 2015", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Paul Lou", "co": "Substack", "p": "Writing", "u": "https://www.linkedin.com/in/paullou1", "dt": "21 Feb 2015", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Thom Eng", "co": "Advance Intelligence Group", "p": "Director", "u": "https://www.linkedin.com/in/thom-eng", "dt": "21 Feb 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Bryan Waterhouse", "co": "Accenture", "p": "Senior Strategy Consultant", "u": "https://www.linkedin.com/in/bryanwaterhouse", "dt": "11 Jan 2015", "s": null, "rm": true, "sc": 2}, {"n": "Rajesh Bhusal", "co": "Ageas UK", "p": "Senior Pricing Analyst", "u": "https://www.linkedin.com/in/rajeshbhusal", "dt": "04 Jan 2015", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Justin Katiraei", "co": "Vector Capital Management", "p": "Principal", "u": "https://www.linkedin.com/in/katiraei", "dt": "30 Dec 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "David Millstein", "co": "Accenture", "p": "Senior Strategy Consultant", "u": "https://www.linkedin.com/in/david-millstein", "dt": "23 Dec 2014", "s": null, "rm": true, "sc": 2}, {"n": "Samuel Audette", "co": "Emperor's College", "p": "Technical Supervisor", "u": "https://www.linkedin.com/in/samuel-audette-1336469b", "dt": "23 Dec 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Maya Hansen", "co": "Oklahoma Indigent Defense System, Norman Capital Trial Division", "p": "Capital Counsel", "u": "https://www.linkedin.com/in/maya-hansen-460903a3", "dt": "15 Dec 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Ahon Sarkar", "co": "Q2", "p": "SVP & General Manager, Helix", "u": "https://www.linkedin.com/in/ahonsarkar", "dt": "06 Dec 2014", "s": null, "rm": true, "sc": 2}, {"n": "Troy Sipprelle", "co": "Fiserv", "p": "Product Strategy", "u": "https://www.linkedin.com/in/troy-sipprelle", "dt": "01 Dec 2014", "s": null, "rm": true, "sc": 2}, {"n": "Austin Zheutlin", "co": "RunSybil", "p": "Head of Business Operations", "u": "https://www.linkedin.com/in/austindz", "dt": "01 Dec 2014", "s": null, "rm": true, "sc": 2}, {"n": "Tony Zhao", "co": "Olive Partners Management", "p": "Investment Director", "u": "https://www.linkedin.com/in/tonyfzhao", "dt": "06 Nov 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Sophia Lin", "co": "Roku", "p": "Partner Growth Strategy", "u": "https://www.linkedin.com/in/linsoph", "dt": "14 Oct 2014", "s": null, "rm": true, "sc": 2}, {"n": "Austin Kohlman", "co": "Aviation Management Consulting Group", "p": "Legal Administrative Assistant", "u": "https://www.linkedin.com/in/austin-kohlman-706aa24a", "dt": "04 Sep 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Bathsheba Weiler", "co": "Hunter College", "p": "Student", "u": "https://www.linkedin.com/in/bathsheba-weiler-479aab70", "dt": "20 Jul 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Eleanor Clifford", "co": "The George Washington University Hospital", "p": "Resident Physician", "u": "https://www.linkedin.com/in/eleanor-clifford", "dt": "14 Jul 2014", "s": "physical_world", "rm": false, "sc": 2}, {"n": "Josh Ackerman", "co": "Stripe", "p": "Head of Product, Radar", "u": "https://www.linkedin.com/in/joshuafackerman", "dt": "14 Jul 2014", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Maheema Haque", "co": "TikTok USDS Joint Venture", "p": "Investigations Counsel | TikTok U.S. Data Security", "u": "https://www.linkedin.com/in/maheema-haque-542a8993", "dt": "11 Jul 2014", "s": "consumer_tech", "rm": false, "sc": 2}, {"n": "Nora Bingham", "co": "Reva and David Logan Center for the Arts", "p": "Events and Operations Coordinator", "u": "https://www.linkedin.com/in/nora-bingham-30901663", "dt": "11 Jul 2014", "s": null, "rm": true, "sc": 2}, {"n": "Dr. Robin Greif", "co": "ACPCM GmbH", "p": "Strategy & Pricing Strategy for Financial-Market Firms", "u": "https://www.linkedin.com/in/robin-greif", "dt": "11 Jul 2014", "s": null, "rm": true, "sc": 2}, {"n": "Jay Moon", "co": "OpenAI", "p": "Member of Design Staff", "u": "https://www.linkedin.com/in/jay-moon-0b969322", "dt": "23 Jun 2014", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Alexis-Brianna Felix", "co": "Mission North", "p": "Senior Director, Content Strategy", "u": "https://www.linkedin.com/in/alexisbriannafelix", "dt": "04 Jun 2014", "s": null, "rm": true, "sc": 2}, {"n": "Justin Bleuel", "co": "OpenAI", "p": "Product", "u": "https://www.linkedin.com/in/justinbleuel", "dt": "23 May 2014", "s": "platform_infra", "rm": false, "sc": 2}, {"n": "Rachel Scheinfeld", "co": "Level99 Entertainment", "p": "Vice President, Marketing & Strategy", "u": "https://www.linkedin.com/in/rachelscheinfeld", "dt": "15 Apr 2014", "s": null, "rm": true, "sc": 2}, {"n": "Andrew Demas", "co": "IBM", "p": "Partner, Customer & Experience Strategy Leader: Telco, Media, Tech, Energy, & Manufacturing", "u": "https://www.linkedin.com/in/andrew-demas", "dt": "15 Apr 2014", "s": null, "rm": true, "sc": 2}];
-let existingPeople = new Set(["Jamie Doheny", "Janet Jin", "Harikrishna Menon", "Pranav Panchagni", "Michael Riordan", "Tamir Melinek", "Colleen O'Malley", "Bryant Lee", "Rohan Shah", "Jiyoung Chang", "Madison Lee", "Jeffrey Monahan", "Rosemary Williams", "Jacob S\u00f6derstjerna", "Sofia Cianchi", "Richard Lopez", "Lu Zhang", "Andrea Fang", "Casey Mulroy", "Alisa Ming Yi Ng", "Alicia Lee", "Ferris Wang", "Sarah Super", "Raleigh Ann Gray", "Andrew Thompson", "Matthew Roknich", "Benjamin Levick", "Kelly Chou", "Austin Meyer", "Frank Chiang", "Gabi Lustig", "Chase Mathew", "Mikael Woxblom", "Sam Lopez III", "Zachary Landesberg", "Clara Pomi", "Gaurab Bose", "Julisa Salas", "Vaishishtya Naik", "Chris D'Angelo", "Karan Chachlani", "Andrew Antos", "Alex Menendez", "Chris Carey", "Landon Mossberg", "Ryan Alshak", "Quyen Tien", "George Eliadis", "Stephen Varghese", "Emil Dyrvig"].map(n=>n.toLowerCase()));
-let currentFilter='all';
-let sentMap={};expandedMap={};messages={};addedMap={};
-
-let expAllConns=[];
-let expFilter='all';
-let expPage=1;
+let actRecords=[], actFilter='all', actSentMap={}, actDoneMap={}, actExpandedMap={}, actMessages={};
+let expRecords=[], expFilter='all', expPage=1;
 const EXP_PAGE_SIZE=50;
+let atPeopleMap={};
+
+function toast(msg,dur=3000){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
 
 function switchTab(id,el){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   el.classList.add('active');
+  if(id==='activator'&&actRecords.length===0) loadActivator();
+  if(id==='explorer'&&expRecords.length===0) loadExplorer();
 }
 
-function toast(msg,dur=2500){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),dur);
+async function fetchAllPeople(){
+  let records=[], offset=null;
+  do {
+    let url=`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}?pageSize=100`;
+    if(offset) url+=`&offset=${offset}`;
+    const res=await fetch(url,{headers:{'Authorization':`Bearer ${AT_TOKEN}`}});
+    const data=await res.json();
+    if(data.records) records=[...records,...data.records];
+    offset=data.offset||null;
+  } while(offset);
+  return records;
 }
 
-function scoreConn(c){
-  const co=(c.co||'').toLowerCase(),po=(c.p||'').toLowerCase();
-  let sector=null;
-  for(const[s,kws]of Object.entries(TARGET_SECTORS)){if(kws.some(k=>co.includes(k))){sector=s;break;}}
-  const rm=TARGET_ROLES.some(r=>po.includes(r));
+async function loadActivator(){
+  document.getElementById('act-list').innerHTML='<div class="loading">Loading from Airtable...</div>';
+  document.getElementById('act-total').textContent='…';
+  try{
+    const allRecords=await fetchAllPeople();
+    // Filter to not contacted or sent, with a score
+    actRecords=allRecords
+      .filter(r=>['Not Contacted','Sent'].includes(r.fields['Status']))
+      .sort((a,b)=>(b.fields['Score']||0)-(a.fields['Score']||0));
+    document.getElementById('act-total').textContent=actRecords.length;
+    document.getElementById('act-top').textContent=actRecords.filter(r=>(r.fields['Score']||0)>=5).length;
+    actRender();
+  }catch(e){
+    document.getElementById('act-list').innerHTML='<div class="empty">Failed to load. Check token.</div>';
+    console.error(e);
+  }
+}
+
+async function loadExplorer(){
+  document.getElementById('exp-table-wrap').innerHTML='<div class="loading">Loading from Airtable...</div>';
+  try{
+    expRecords=await fetchAllPeople();
+    expRender();
+  }catch(e){
+    document.getElementById('exp-table-wrap').innerHTML='<div class="empty">Failed to load.</div>';
+  }
+}
+
+function getInitials(n){return(n||'').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();}
+function sectorLabel(s){return s||null;}
+function avClass(s){return s==='Consumer Tech'?'av-consumer':s==='Platform Infra'?'av-platform':s==='Physical World'?'av-physical':'av-other';}
+function badgeClass(s){return s==='Consumer Tech'?'b-consumer':s==='Platform Infra'?'b-platform':s==='Physical World'?'b-physical':'b-role';}
+function pillClass(s){return s==='Consumer Tech'?'p-consumer':s==='Platform Infra'?'p-platform':s==='Physical World'?'p-physical':'p-none';}
+function statusPill(s){
+  if(s==='Not Contacted')return'p-notcontacted';
+  if(s==='Sent')return'p-sent';
+  if(s==='Replied')return'p-replied';
+  if(s==='Meeting Booked')return'p-meeting';
+  if(s==='Active Interview')return'p-interview';
+  if(s==='Closed'||s==='Inactive')return'p-closed';
+  return'p-notcontacted';
+}
+
+function getLiUrl(r){
+  const notes=r.fields['Notes']||'';
+  const match=notes.match(/LinkedIn:\s*(https:\/\/[^\s|]+)/);
+  return match?match[1]:'#';
+}
+
+function getCompany(r){
+  const notes=r.fields['Notes']||'';
+  const match=notes.match(/Company:\s*([^|]+)/);
+  return match?match[1].trim():'';
+}
+
+function genMsg(r){
+  const fn=(r.fields['Name']||'').split(' ')[0];
+  const co=getCompany(r)||'your company';
+  const opts=[
+    `Hey ${fn} — hope things are going well. I'm exploring Chief of Staff and BizOps roles at high-growth companies and noticed you're doing great work at ${co}. I've spent 6 years in ops and strategy at Braze, ASAPP, and Artsy — would love to swap notes if you're open to a quick 20 mins?`,
+    `Hi ${fn} — your work at ${co} caught my eye. I'm in the middle of a search for CoS / Strategy & Ops roles and have been building in this space for 6 years across Braze, ASAPP, and Artsy. Would love to connect if you have 20 mins to swap notes?`,
+    `${fn} — reaching out because your path at ${co} is interesting. I'm exploring my next move into Chief of Staff or BizOps. Six years across Braze, ASAPP, and Artsy on the ops and strategy side — any chance you'd be up for a quick call?`
+  ];
+  return opts[Math.floor(Math.random()*opts.length)];
+}
+
+async function markSentAirtable(recordId, name){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const plusSeven=new Date(Date.now()+7*24*60*60*1000).toISOString().split('T')[0];
+    await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${recordId}`,{
+      method:'PATCH',
+      headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{
+        'Status':'Sent',
+        'Last Touched':today,
+        'Next Action':'Follow up',
+        'Next Action Date':plusSeven
+      }})
+    });
+    actSentMap[recordId]=true;
+    toast(`${name} marked sent in Airtable`);
+    actRender();
+  }catch(e){toast('Error updating Airtable');}
+}
+
+function setActFilter(f,el){
+  actFilter=f;
+  document.querySelectorAll('#tab-activator .filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  actRender();
+}
+
+function actFiltered(){
+  return actRecords.filter(r=>{
+    if(actDoneMap[r.id]||actSentMap[r.id]) return false;
+    const sector=r.fields['Sector']||'';
+    if(actFilter==='all') return true;
+    return sector===actFilter;
+  });
+}
+
+function toggleActExpand(id){
+  if(actExpandedMap[id]){delete actExpandedMap[id];}
+  else{
+    actExpandedMap[id]=true;
+    const r=actRecords.find(x=>x.id===id);
+    if(!actMessages[id]&&r) actMessages[id]=genMsg(r);
+  }
+  actRender();
+}
+
+function regenMsg(id){
+  const r=actRecords.find(x=>x.id===id);
+  if(r) actMessages[id]=genMsg(r);
+  actRender();
+}
+
+function copyMsg(id){
+  if(navigator.clipboard) navigator.clipboard.writeText(actMessages[id]);
+  toast('Message copied');
+}
+
+function actRender(){
+  const list=actFiltered().slice(0,20);
+  document.getElementById('act-sent').textContent=Object.keys(actSentMap).length;
+  document.getElementById('act-done').textContent=Object.keys(actDoneMap).length;
+  document.getElementById('act-label').textContent=`Showing ${list.length} contacts`;
+
+  if(!list.length){
+    document.getElementById('act-list').innerHTML='<div class="empty">No contacts match. Try refreshing or changing filter.</div>';
+    return;
+  }
+
+  document.getElementById('act-list').innerHTML=list.map(r=>{
+    const name=r.fields['Name']||'';
+    const role=r.fields['Role']||'';
+    const sector=r.fields['Sector']||'';
+    const score=r.fields['Score']||0;
+    const liUrl=getLiUrl(r);
+    const company=getCompany(r);
+    const isExpanded=actExpandedMap[r.id];
+    const isTop=score>=5;
+    return`<div class="card">
+      <div class="card-top">
+        <div class="avatar ${avClass(sector)}">${getInitials(name)}</div>
+        <div class="card-info">
+          <div class="card-name">${name}</div>
+          <div class="card-meta">${role}${company?' · '+company:''}</div>
+          <div class="badges">
+            ${isTop?'<span class="badge b-top">Top match</span>':''}
+            ${sector?`<span class="badge ${badgeClass(sector)}">${sector}</span>`:''}
+            ${score?`<span class="badge b-role">Score ${score}</span>`:''}
+          </div>
+        </div>
+        ${liUrl!=='#'?`<a href="${liUrl}" class="li-link" target="_blank">↗</a>`:''}
+      </div>
+      ${isExpanded?`
+        <div class="msg-box" contenteditable="true" id="msg-${r.id}">${actMessages[r.id]||''}</div>
+        <div class="actions">
+          <button class="btn primary" onclick="markSentAirtable('${r.id}','${name.replace(/'/g,"\\'")}')">Mark sent</button>
+          <button class="btn" onclick="regenMsg('${r.id}')">New draft</button>
+          <button class="btn" onclick="copyMsg('${r.id}')">Copy</button>
+          <button class="btn" onclick="toggleActExpand('${r.id}')">Collapse</button>
+        </div>
+      `:`
+        <div class="actions" style="margin-top:10px">
+          <button class="btn primary" onclick="toggleActExpand('${r.id}')">Draft message</button>
+          ${liUrl!=='#'?`<a href="${liUrl}" class="btn" target="_blank">↗ LinkedIn</a>`:''}
+        </div>
+      `}
+    </div>`;
+  }).join('');
+}
+
+// UPSERT
+function matchSector(co, kws){
+  return kws.some(k=>{
+    if(k.length<=5){return new RegExp('\\b'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b').test(co);}
+    return co.includes(k);
+  });
+}
+function scoreConn(name, company, position){
+  const co=(company||'').toLowerCase();
+  const po=(position||'').toLowerCase();
   const skip=SKIP_ROLES.some(r=>po.includes(r));
+  if(skip) return{sector:null,roleMatch:false,skip:true,score:0};
+  let sector=null;
+  for(const[s,kws]of Object.entries(TARGET_SECTORS)){
+    if(matchSector(co,kws)){sector=s;break;}
+  }
+  const rm=TARGET_ROLES.some(r=>po.includes(r));
+  if(!sector&&!rm) return{sector:null,roleMatch:false,skip:false,score:0};
+  const displaySector=sector||'Other';
   const sc=(sector?2:0)+(rm?2:0)+(sector&&rm?1:0);
-  return{...c,s:sector,rm,skip,sc};
+  return{sector:displaySector,roleMatch:rm,skip:false,score:sc};
 }
 
-function parseCSVText(text){
+function parseLI(text){
   const lines=text.split('\n');
+  const hi=lines.findIndex(l=>l.includes('First Name'));
+  if(hi<0)return[];
+  const rows=parseCSV(lines.slice(hi).join('\n'));
+  return rows.filter(r=>r['First Name']&&r['Last Name']).map(r=>({
+    name:r['First Name'].trim()+' '+r['Last Name'].trim(),
+    company:(r['Company']||'').trim(),
+    position:(r['Position']||'').trim(),
+    url:(r['URL']||'').trim()
+  }));
+}
+
+function parseCSV(text){
+  const lines=text.split('\n');
+  if(!lines.length)return[];
   const headers=splitLine(lines[0]);
   return lines.slice(1).map(l=>{
     const v=splitLine(l);const o={};
@@ -235,233 +466,107 @@ function splitLine(line){
   r.push(c);return r;
 }
 
-function parseLI(text){
-  const lines=text.split('\n');
-  const hi=lines.findIndex(l=>l.includes('First Name'));
-  if(hi<0)return[];
-  const rows=parseCSVText(lines.slice(hi).join('\n'));
-  return rows.filter(r=>r['First Name']&&r['Last Name']).map(r=>({
-    n:r['First Name'].trim()+' '+r['Last Name'].trim(),
-    co:(r['Company']||'').trim(),
-    p:(r['Position']||'').trim(),
-    u:(r['URL']||'').trim(),
-    dt:(r['Connected On']||'').trim()
-  }));
-}
-
-document.getElementById('li-upload').addEventListener('change',e=>{
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const parsed=parseLI(ev.target.result);
-    const scored=parsed.map(scoreConn).filter(c=>!c.skip&&!existingPeople.has(c.n.toLowerCase())&&(c.s||c.rm));
-    scored.sort((a,b)=>b.sc-a.sc);
-    allConnections=scored;
-    sentMap={};expandedMap={};messages={};addedMap={};
-    document.getElementById('upload-status').textContent=`LinkedIn CSV loaded — ${scored.length} scored connections`;
-    actRender();
-  };
-  reader.readAsText(file);
-});
-
-document.getElementById('at-upload').addEventListener('change',e=>{
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const rows=parseCSVText(ev.target.result);
-    const names=rows.map(r=>(r['Name']||'').trim()).filter(Boolean);
-    existingPeople=new Set(names.map(n=>n.toLowerCase()));
-    allConnections=allConnections.filter(c=>!existingPeople.has(c.n.toLowerCase()));
-    document.getElementById('upload-status').textContent=`Airtable CSV loaded — ${names.length} people excluded`;
-    actRender();
-  };
-  reader.readAsText(file);
-});
-
-document.getElementById('exp-li-upload').addEventListener('change',e=>{
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const parsed=parseLI(ev.target.result).map(c=>{
-      const co=c.co.toLowerCase(),po=c.p.toLowerCase();
-      let sector=null;
-      for(const[s,kws]of Object.entries(TARGET_SECTORS)){if(kws.some(k=>co.includes(k))){sector=s;break;}}
-      const rm=TARGET_ROLES.some(r=>po.includes(r));
-      return{...c,sector,rm};
-    });
-    expAllConns=parsed;expPage=1;
-    document.getElementById('exp-upload-status').textContent=`${parsed.length} connections loaded`;
-    document.getElementById('exp-stats').style.display='grid';
-    document.getElementById('exp-controls').style.display='flex';
-    expRender();
-  };
-  reader.readAsText(file);
-});
-
-document.getElementById('exp-at-upload').addEventListener('change',e=>{
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const rows=parseCSVText(ev.target.result);
-    const names=rows.map(r=>(r['Name']||'').trim()).filter(Boolean);
-    existingPeople=new Set(names.map(n=>n.toLowerCase()));
-    document.getElementById('exp-upload-status').textContent=`${names.length} GTM OS people loaded`;
-    expRender();
-  };
-  reader.readAsText(file);
-});
-
-function getInitials(n){return n.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();}
-function sectorLabel(s){return s==='consumer_tech'?'Consumer tech':s==='platform_infra'?'Platform infra':s==='physical_world'?'Physical world':null;}
-function avClass(s){return s==='consumer_tech'?'av-consumer':s==='platform_infra'?'av-platform':s==='physical_world'?'av-physical':'av-other';}
-function badgeClass(s){return s==='consumer_tech'?'b-consumer':s==='platform_infra'?'b-platform':s==='physical_world'?'b-physical':'b-role';}
-function pillClass(s){return s==='consumer_tech'?'p-consumer':s==='platform_infra'?'p-platform':s==='physical_world'?'p-physical':'p-none';}
-
-function genMsg(c){
-  const fn=c.n.split(' ')[0];
-  const co=c.co||'your company';
-  const opts=[
-    `Hey ${fn} — hope things are going well. I'm exploring Chief of Staff and BizOps roles at high-growth companies and noticed you're doing great work at ${co}. I've spent 6 years in ops and strategy at Braze, ASAPP, and Artsy — would love to swap notes if you're open to a quick 20 mins?`,
-    `Hi ${fn} — your work at ${co} caught my eye. I'm in the middle of a search for CoS / Strategy & Ops roles and have been building in this space for 6 years across Braze, ASAPP, and Artsy. Would love to connect if you have 20 mins to swap notes?`,
-    `${fn} — reaching out because your path at ${co} is interesting. I'm exploring my next move into Chief of Staff or BizOps. Six years across Braze, ASAPP, and Artsy on the ops and strategy side — any chance you'd be up for a quick call?`
-  ];
-  return opts[Math.floor(Math.random()*opts.length)];
-}
-
-async function addToAirtable(c){
-  const today=new Date();
-  const plusSeven=new Date(today.getTime()+7*24*60*60*1000);
-  const fmt=d=>d.toISOString().split('T')[0];
-  const motion=c.sc===5?'Leverage':'Grow';
-  const warmth=c.sc>=3?'Warm':'Cold';
-  const fields = {
-    'Name':c.n,
-    'Role':c.p,
-    'Motion':'Leverage',
-    'Status':'Not Contacted',
-    'Notes':`Company: ${c.co}`
-  };
-  try{
-    const res=await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{
-      method:'POST',
-      headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
-      body:JSON.stringify({fields, typecast: true})
-    });
-    if(res.ok){
-      addedMap[c.n]=true;
-      toast(`${c.n} added to Airtable`);
-      actRender();
-    } else {
-      const err=await res.json();
-      toast(`Error: ${JSON.stringify(err)}`);
-    }
-  } catch(e){
-    toast('Network error — check connection');
-  }
-}
-
-function actFiltered(){
-  return allConnections.filter(c=>{
-    if(currentFilter==='all')return true;
-    if(currentFilter==='top')return c.sc===5;
-    if(currentFilter==='role_only')return c.rm&&!c.s;
-    return c.s===currentFilter;
+async function buildAtMap(){
+  toast('Loading Airtable records...');
+  const all=await fetchAllPeople();
+  atPeopleMap={};
+  all.forEach(r=>{
+    const name=(r.fields['Name']||'').toLowerCase().trim();
+    if(name) atPeopleMap[name]=r.id;
   });
+  return atPeopleMap;
 }
 
-function setFilter(f,el){
-  currentFilter=f;
-  document.querySelectorAll('#tab-activator .filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  actRender();
-}
+document.getElementById('li-upload').addEventListener('change',async e=>{
+  const file=e.target.files[0];if(!file)return;
+  document.getElementById('upsert-status').textContent='Parsing CSV...';
+  document.getElementById('upsert-progress-bar').style.display='block';
+  document.getElementById('upsert-progress-fill').style.width='10%';
 
-function shuffleAll(){
-  for(let i=allConnections.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [allConnections[i],allConnections[j]]=[allConnections[j],allConnections[i]];
-  }
-  actRender();
-}
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    const connections=parseLI(ev.target.result);
+    const scored=connections.map(c=>({...c,...scoreConn(c.name,c.company,c.position)}))
+      .filter(c=>!c.skip&&(c.sector||c.roleMatch));
 
-function toggleExpand(name){
-  if(expandedMap[name]){delete expandedMap[name];}
-  else{expandedMap[name]=true;if(!messages[name])messages[name]=genMsg(allConnections.find(c=>c.n===name));}
-  actRender();
-}
+    document.getElementById('upsert-status').textContent=`Found ${scored.length} scored connections. Loading Airtable...`;
+    document.getElementById('upsert-progress-fill').style.width='20%';
+    document.getElementById('us-csv').textContent=scored.length;
+    document.getElementById('upsert-stats').style.display='grid';
 
-function regen(name){messages[name]=genMsg(allConnections.find(c=>c.n===name));actRender();}
+    await buildAtMap();
+    document.getElementById('upsert-progress-fill').style.width='40%';
 
-function copyMsg(name){
-  if(navigator.clipboard)navigator.clipboard.writeText(messages[name]);
-  toast('Message copied');
-}
+    let newCount=0, updatedCount=0, skippedCount=0;
+    const results=[];
+    const total=scored.length;
 
-function markSent(name){
-  sentMap[name]=true;delete expandedMap[name];
-  toast(`${name} marked sent`);
-  actRender();
-}
+    for(let i=0;i<scored.length;i++){
+      const c=scored[i];
+      const key=c.name.toLowerCase().trim();
+      const existingId=atPeopleMap[key];
+      const progress=40+Math.round((i/total)*55);
+      document.getElementById('upsert-progress-fill').style.width=progress+'%';
+      document.getElementById('upsert-status').textContent=`Processing ${i+1} of ${total}...`;
 
-function actRender(){
-  const list=actFiltered().filter(c=>!sentMap[c.n]).slice(0,20);
-  const total=allConnections.length;
-  const top=allConnections.filter(c=>c.sc===5).length;
-  const sent=Object.keys(sentMap).length;
-  const added=Object.keys(addedMap).length;
+      if(existingId){
+        // Update score and sector only if not already set
+        try{
+          await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${existingId}`,{
+            method:'PATCH',
+            headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+            body:JSON.stringify({fields:{
+              'Score':c.score,
+              'Sector':c.sector||''
+            }})
+          });
+          updatedCount++;
+          results.push({name:c.name,type:'update',company:c.company});
+        }catch(e){skippedCount++;results.push({name:c.name,type:'skip',company:c.company});}
+      } else {
+        // Create new record
+        try{
+          await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}`,{
+            method:'POST',
+            headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+            body:JSON.stringify({fields:{
+              'Role':c.position,
+              'Motion':'Leverage',
+              'Warmth':'Cold',
+              'Status':'Not Contacted',
+              'Score':c.score,
+              'Sector':c.sector||'',
+              'Notes':`Company: ${c.company} | LinkedIn: ${c.url}`
+            }})
+          });
+          newCount++;
+          results.push({name:c.name,type:'new',company:c.company});
+        }catch(e){skippedCount++;results.push({name:c.name,type:'skip',company:c.company});}
+      }
+      // Rate limit: 5 req/sec
+      if(i%5===4) await new Promise(r=>setTimeout(r,1000));
+    }
 
-  document.getElementById('act-stats').innerHTML=`
-    <div class="stat"><div class="stat-label">Total matches</div><div class="stat-value">${total}</div></div>
-    <div class="stat"><div class="stat-label">Top matches</div><div class="stat-value">${top}</div></div>
-    <div class="stat"><div class="stat-label">Sent today</div><div class="stat-value">${sent}</div></div>
-    <div class="stat"><div class="stat-label">Added to OS</div><div class="stat-value">${added}</div></div>
-  `;
-  document.getElementById('queue-label').textContent=`Showing ${list.length} connections`;
+    document.getElementById('upsert-progress-fill').style.width='100%';
+    document.getElementById('upsert-status').textContent=`Done — ${newCount} new, ${updatedCount} updated, ${skippedCount} skipped`;
+    document.getElementById('us-new').textContent=newCount;
+    document.getElementById('us-updated').textContent=updatedCount;
+    document.getElementById('us-skipped').textContent=skippedCount;
 
-  if(!list.length){document.getElementById('contact-list').innerHTML='<div class="empty">No connections match this filter.</div>';return;}
-
-  document.getElementById('contact-list').innerHTML=list.map(c=>{
-    const isExpanded=expandedMap[c.n];
-    const isAdded=addedMap[c.n];
-    const sl=sectorLabel(c.s);
-    const ac=avClass(c.s);
-    const bc=badgeClass(c.s);
-    const isTop=c.sc===5;
-    const safeId=c.n.replace(/[^a-zA-Z0-9]/g,'_');
-    return`<div class="card">
-      <div class="card-top">
-        <div class="avatar ${ac}">${getInitials(c.n)}</div>
-        <div class="card-info">
-          <div class="card-name">${c.n}${isAdded?' <span class="badge b-added">In GTM OS</span>':''}</div>
-          <div class="card-meta">${c.p||'—'} · ${c.co||'—'}</div>
-          <div class="badges">
-            ${isTop?'<span class="badge b-top">Top match</span>':''}
-            ${sl?`<span class="badge ${bc}">${sl}</span>`:''}
-            ${c.rm?'<span class="badge b-role">Role match</span>':''}
-          </div>
-        </div>
-        <a href="${c.u}" class="li-link" target="_blank">↗</a>
+    // Show top 20 results
+    document.getElementById('upsert-results').innerHTML=results.slice(0,20).map(r=>`
+      <div class="result-row result-${r.type}">
+        <span>${r.name} <span style="color:#888;font-size:12px">${r.company}</span></span>
+        <span class="tag tag-${r.type}">${r.type}</span>
       </div>
-      ${isExpanded?`
-        <div class="msg-box" id="msg-${safeId}" contenteditable="true">${messages[c.n]}</div>
-        <div class="actions">
-          <button class="btn primary" onclick="markSent('${c.n}')">Mark sent</button>
-          <button class="btn success" onclick="addToAirtable(allConnections.find(x=>x.n==='${c.n}'))" ${isAdded?'disabled':''}>${isAdded?'Added':'Add to Airtable'}</button>
-          <button class="btn" onclick="regen('${c.n}')">New draft</button>
-          <button class="btn" onclick="copyMsg('${c.n}')">Copy</button>
-          <button class="btn" onclick="toggleExpand('${c.n}')">Collapse</button>
-        </div>
-      `:`
-        <div class="actions" style="margin-top:10px">
-          <button class="btn primary" onclick="toggleExpand('${c.n}')">Draft message</button>
-          <button class="btn success" onclick="addToAirtable(allConnections.find(x=>x.n==='${c.n}'))" ${isAdded?'disabled':''}>${isAdded?'Added':'Add to Airtable'}</button>
-          <a href="${c.u}" class="btn" target="_blank">↗ LinkedIn</a>
-        </div>
-      `}
-    </div>`;
-  }).join('');
-}
+    `).join('');
 
+    toast(`Sync complete — ${newCount} new, ${updatedCount} updated`);
+  };
+  reader.readAsText(file);
+});
+
+// EXPLORER
 function setExpFilter(f,el){
   expFilter=f;expPage=1;
   document.querySelectorAll('#tab-explorer .filter-btn').forEach(b=>b.classList.remove('active'));
@@ -471,52 +576,53 @@ function setExpFilter(f,el){
 
 function expFiltered(){
   const q=(document.getElementById('exp-search')?.value||'').toLowerCase();
-  return expAllConns.filter(c=>{
-    const matchQ=!q||(c.n+c.co+c.p).toLowerCase().includes(q);
-    const inSys=existingPeople.has(c.n.toLowerCase());
-    if(expFilter==='in_system')return matchQ&&inSys;
-    if(expFilter==='not_in_system')return matchQ&&!inSys;
-    if(expFilter==='all')return matchQ;
-    return matchQ&&c.sector===expFilter;
+  return expRecords.filter(r=>{
+    const name=(r.fields['Name']||'').toLowerCase();
+    const role=(r.fields['Role']||'').toLowerCase();
+    const notes=(r.fields['Notes']||'').toLowerCase();
+    const matchQ=!q||(name+role+notes).includes(q);
+    const sector=r.fields['Sector']||'';
+    const status=r.fields['Status']||'';
+    if(expFilter==='all') return matchQ;
+    if(expFilter==='Not Contacted'||expFilter==='Replied') return matchQ&&status===expFilter;
+    return matchQ&&sector===expFilter;
   });
 }
 
 function expRender(){
   const all=expFiltered();
-  const total=expAllConns.length;
-  const inSys=expAllConns.filter(c=>existingPeople.has(c.n.toLowerCase())).length;
-  const sectors=Object.keys(TARGET_SECTORS).reduce((a,s)=>{a[s]=expAllConns.filter(c=>c.sector===s).length;return a;},{});
-
-  document.getElementById('exp-stats').innerHTML=`
-    <div class="stat"><div class="stat-label">Total</div><div class="stat-value">${total}</div></div>
-    <div class="stat"><div class="stat-label">In GTM OS</div><div class="stat-value">${inSys}</div></div>
-    <div class="stat"><div class="stat-label">Target sectors</div><div class="stat-value">${Object.values(sectors).reduce((a,b)=>a+b,0)}</div></div>
-    <div class="stat"><div class="stat-label">Showing</div><div class="stat-value">${all.length}</div></div>
-  `;
-
   const pages=Math.ceil(all.length/EXP_PAGE_SIZE);
   if(expPage>pages)expPage=1;
   const slice=all.slice((expPage-1)*EXP_PAGE_SIZE,expPage*EXP_PAGE_SIZE);
 
+  document.getElementById('exp-label').textContent=`${all.length} of ${expRecords.length} contacts`;
+
   if(!slice.length){
-    document.getElementById('exp-table-wrap').innerHTML='<div class="empty">No connections match.</div>';
+    document.getElementById('exp-table-wrap').innerHTML='<div class="empty">No contacts match.</div>';
     document.getElementById('exp-pagination').innerHTML='';
     return;
   }
 
   document.getElementById('exp-table-wrap').innerHTML=`<table>
     <thead><tr>
-      <th>Name</th><th>Company</th><th>Role</th><th>Sector</th><th>In OS</th><th>Link</th>
+      <th>Name</th><th>Role</th><th>Sector</th><th>Score</th><th>Status</th><th>Last touched</th><th>Link</th>
     </tr></thead>
-    <tbody>${slice.map(c=>{
-      const inSys=existingPeople.has(c.n.toLowerCase());
+    <tbody>${slice.map(r=>{
+      const name=r.fields['Name']||'';
+      const role=r.fields['Role']||'';
+      const sector=r.fields['Sector']||'';
+      const score=r.fields['Score']||'';
+      const status=r.fields['Status']||'';
+      const lastTouched=r.fields['Last Touched']||'';
+      const liUrl=getLiUrl(r);
       return`<tr>
-        <td class="td-name">${c.n}</td>
-        <td class="td-company">${c.co||'—'}</td>
-        <td class="td-pos" title="${c.p}">${c.p||'—'}</td>
-        <td><span class="pill ${pillClass(c.sector)}">${sectorLabel(c.sector)||'—'}</span></td>
-        <td><span class="pill ${inSys?'p-in':'p-out'}">${inSys?'Yes':'No'}</span></td>
-        <td class="td-link"><a href="${c.u}" target="_blank">↗ View</a></td>
+        <td class="td-name">${name}</td>
+        <td class="td-pos" title="${role}">${role||'—'}</td>
+        <td><span class="pill ${pillClass(sector)}">${sector||'—'}</span></td>
+        <td>${score||'—'}</td>
+        <td><span class="pill ${statusPill(status)}">${status||'—'}</span></td>
+        <td style="font-size:12px;color:#888">${lastTouched||'—'}</td>
+        <td>${liUrl!=='#'?`<a href="${liUrl}" target="_blank" style="font-size:12px;color:#2563eb">↗</a>`:'—'}</td>
       </tr>`;
     }).join('')}</tbody>
   </table>`;
@@ -524,13 +630,16 @@ function expRender(){
   const pg=document.getElementById('exp-pagination');
   if(pages<=1){pg.innerHTML='';return;}
   let btns='';
-  for(let i=1;i<=Math.min(pages,10);i++){
+  const start=Math.max(1,expPage-3);
+  const end=Math.min(pages,expPage+3);
+  for(let i=start;i<=end;i++){
     btns+=`<button class="page-btn${i===expPage?' active':''}" onclick="expPage=${i};expRender()">${i}</button>`;
   }
   pg.innerHTML=`<span class="page-info">Page ${expPage} of ${pages}</span>${btns}`;
 }
 
-actRender();
+// Load activator on start
+loadActivator();
 </script>
 </body>
 </html>
