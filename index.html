@@ -606,7 +606,7 @@ function expRender(){
 
   document.getElementById('exp-table-wrap').innerHTML=`<table>
     <thead><tr>
-      <th>Name</th><th>Role</th><th>Sector</th><th>Score</th><th>Status</th><th>Last touched</th><th>Link</th>
+      <th>Name</th><th>Company</th><th>Role</th><th>Sector</th><th>Score</th><th>Status</th><th>Last touched</th><th>Link</th>
     </tr></thead>
     <tbody>${slice.map(r=>{
       const name=r.fields['Name']||'';
@@ -618,7 +618,8 @@ function expRender(){
       const liUrl=getLiUrl(r);
       return`<tr>
         <td class="td-name">${name}</td>
-        <td class="td-pos" title="${role}">${role||'—'}</td>
+          <td style="color:#555;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${getCompany(r)||'—'}</td>
+          <td class="td-pos" title="${role}">${role||'—'}</td>
         <td><span class="pill ${pillClass(sector)}">${sector||'—'}</span></td>
         <td>${score||'—'}</td>
         <td><span class="pill ${statusPill(status)}">${status||'—'}</span></td>
