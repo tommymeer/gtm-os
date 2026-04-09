@@ -114,12 +114,10 @@ tr.expand-row td{padding:0;background:#f9f8f6}
     <button class="tab active" onclick="switchTab('explorer',this)">Network</button>
     <button class="tab" onclick="switchTab('upsert',this)">Sync</button>
   </div>
-
   <!-- TAB 1: EXPLORER / NETWORK -->
   <div class="panel active" id="tab-explorer">
     <h2>Network</h2>
     <p class="subtitle">Your full GTM OS — sorted by priority score</p>
-
     <div class="controls">
       <input class="search-input" type="text" id="exp-search" placeholder="Search name, company, role..." oninput="expRender()">
       <button class="filter-btn active" onclick="setExpFilter('all',this)">All</button>
@@ -134,7 +132,6 @@ tr.expand-row td{padding:0;background:#f9f8f6}
       <div class="spacer"></div>
       <button class="icon-btn" onclick="loadExplorer()">Refresh</button>
     </div>
-
     <div class="queue-label" id="exp-label"></div>
     <div class="bulk-bar" id="bulk-bar">
       <span class="bulk-label" id="bulk-label">0 selected</span>
@@ -152,7 +149,6 @@ tr.expand-row td{padding:0;background:#f9f8f6}
     <div id="exp-table-wrap"><div class="loading">Loading from Airtable...</div></div>
     <div class="pagination" id="exp-pagination"></div>
   </div>
-
   <!-- TAB 2: SYNC -->
   <div class="panel" id="tab-upsert">
     <h2>Sync network</h2>
@@ -176,14 +172,11 @@ tr.expand-row td{padding:0;background:#f9f8f6}
     <div id="upsert-results"></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 const AT_TOKEN = "patguPO1PluxJKr5O.ca16ba80928fc3767cc28e9bee32f09b172e31f5944914b3b30a42b8d55bf54d";
 const AT_BASE = "appm94Nanu5eZgveU";
 const AT_PEOPLE = "tbl43qHrT8yJEpl0u";
-
 const TARGET_SECTORS = {
   'Consumer Tech':['meta','facebook','instagram','twitter','tiktok','snap','snapchat','reddit','discord','pinterest','nextdoor','spotify','netflix','twitch','youtube','soundcloud','substack','duolingo','bumble','hinge','match','tinder','roblox','airbnb','etsy','ebay','whatnot','depop','poshmark','vinted','stockx','doordash','instacart','gopuff','grubhub','uber','lyft','shopify','shopmy','robinhood','coinbase','chime','venmo','wise','revolut','nubank','monzo','openai','character.ai','canva','peloton','headspace','calm','linkedin'],
   'Platform Infra':['stripe','plaid','adyen','checkout.com','braintree','marqeta','lithic','finix','unit','column','modern treasury','mercury','increase','twilio','sendgrid','bandwidth','vonage','sinch','auth0','okta','stytch','persona','alloy','socure','segment','rudderstack','amplitude','mixpanel','databricks','snowflake','fivetran','airbyte','datadog','new relic','grafana','sentry','pagerduty','cloudflare','fastly','akamai','github','gitlab','vercel','netlify','supabase','planetscale','neon','salesforce','hubspot','notion','linear','figma','miro','anthropic','cohere','mistral','zendesk','intercom','contentful','palantir','relay'],
@@ -191,20 +184,17 @@ const TARGET_SECTORS = {
 };
 const TARGET_ROLES=['chief of staff','biz ops','bizops','business operations','strategy and operations','strategy & operations','strategy & ops','revenue operations','revops','go-to-market','gtm','product operations','chief operating','coo','head of operations','director of operations','vp of operations','vp, operations','head of strategy','director of strategy','vp of strategy','vp, strategy','strategy manager','strategy director','strategy lead','strategy analyst','general manager','head of biz','director of biz','program manager','finance and operations','finance & operations','head of growth','director of growth'];
 const SKIP_ROLES=['software engineer','senior software','staff software','principal engineer','data scientist','machine learning','ml engineer','data engineer','ux designer','ui designer','product designer','recruiter','talent acquisition','sourcer','talent coordinator','talent partner','talent advisor','accountant','lawyer','attorney','legal counsel','paralegal','sales development','sdr','bdr','account executive','account manager','customer success manager','customer success specialist','customer support','customer service','site reliability','devops','security engineer','investment banker','private equity','venture capital','physician','doctor','nurse','resident physician','medical student','law clerk','judicial','financial analyst','wealth advisor','wealth management'];
-
 let expRecords=[], expFilter='all', expPage=1, expandedRow=null, rowMessages={};
 let selectedRows=new Set();
 let hideClosed=true, hideRecent=true;
 let sortField='score', sortDir='desc';
 const EXP_PAGE_SIZE=50;
 let atPeopleMap={};
-
 function toast(msg,dur=3000){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),dur);
 }
-
 function switchTab(id,el){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -212,7 +202,6 @@ function switchTab(id,el){
   el.classList.add('active');
   if(id==='explorer'&&expRecords.length===0) loadExplorer();
 }
-
 async function fetchAllPeople(){
   let records=[], offset=null;
   do {
@@ -225,7 +214,6 @@ async function fetchAllPeople(){
   } while(offset);
   return records;
 }
-
 async function loadExplorer(){
   document.getElementById('exp-table-wrap').innerHTML='<div class="loading">Loading from Airtable...</div>';
   try{
@@ -236,21 +224,17 @@ async function loadExplorer(){
     document.getElementById('exp-table-wrap').innerHTML='<div class="empty">Failed to load. Check token.</div>';
   }
 }
-
 function getLiUrl(r){
   const notes=r.fields['Notes']||'';
   const match=notes.match(/LinkedIn:\s*(https:\/\/[^\s|]+)/);
   return match?match[1]:'';
 }
-
 function getCompany(r){
-  // Check linked Company field first, then Notes
   if(r.fields['Company'] && typeof r.fields['Company']==='string') return r.fields['Company'];
   const notes=r.fields['Notes']||'';
   const match=notes.match(/Company:\s*([^|]+)/);
   return match?match[1].trim():'';
 }
-
 function pillClass(s){
   if(s==='Consumer Tech') return 'p-consumer';
   if(s==='Platform Infra') return 'p-platform';
@@ -258,7 +242,6 @@ function pillClass(s){
   if(s==='Other') return 'p-other';
   return 'p-none';
 }
-
 function statusPill(s){
   if(s==='Not Contacted') return 'p-notcontacted';
   if(s==='Sent') return 'p-sent';
@@ -268,26 +251,25 @@ function statusPill(s){
   if(s==='Closed'||s==='Inactive') return 'p-closed';
   return 'p-notcontacted';
 }
-
 function warmthMultiplier(w){
   if(w==='Strong') return 2;
   if(w==='Warm') return 1.5;
   return 1;
 }
-
 function effectiveScore(r){
   const base=r.fields['Score']||0;
   const warmth=r.fields['Warmth']||'Cold';
   return Math.round(base * warmthMultiplier(warmth) * 10) / 10;
 }
-
 function isRecentlyTouched(r){
   const lt=r.fields['Last Touched'];
   if(!lt) return false;
   const days=(Date.now()-new Date(lt).getTime())/(1000*60*60*24);
   return days < 7;
 }
-
+function todayStr(){
+  return new Date().toISOString().split('T')[0];
+}
 function toggleClosed(){
   hideClosed=!hideClosed;
   const btn=document.getElementById('toggle-closed');
@@ -295,7 +277,6 @@ function toggleClosed(){
   btn.classList.toggle('on', hideClosed);
   expPage=1;expRender();
 }
-
 function toggleRecent(){
   hideRecent=!hideRecent;
   const btn=document.getElementById('toggle-recent');
@@ -303,22 +284,21 @@ function toggleRecent(){
   btn.classList.toggle('on', hideRecent);
   expPage=1;expRender();
 }
-
 function setExpFilter(f,el){
   expFilter=f;expPage=1;expandedRow=null;
   document.querySelectorAll('#tab-explorer .filter-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   expRender();
 }
-
 function setSort(field){
   if(sortField===field) sortDir=sortDir==='desc'?'asc':'desc';
   else{sortField=field;sortDir='desc';}
   expRender();
 }
-
 function expFiltered(){
   const q=(document.getElementById('exp-search')?.value||'').toLowerCase();
+  const today=todayStr();
+  const isDueFilter=(expFilter==='due');
   return expRecords.filter(r=>{
     const name=(r.fields['Name']||'').toLowerCase();
     const role=(r.fields['Role']||'').toLowerCase();
@@ -327,14 +307,23 @@ function expFiltered(){
     const matchQ=!q||(name+role+company+notes).includes(q);
     const sector=r.fields['Sector']||'';
     const status=r.fields['Status']||'';
+    // Always hide closed
     if(hideClosed&&(status==='Closed'||status==='Inactive')) return false;
-    if(hideRecent&&isRecentlyTouched(r)) return false;
+    // Only apply hideRecent when NOT in due filter mode
+    if(!isDueFilter&&hideRecent&&isRecentlyTouched(r)) return false;
     if(!matchQ) return false;
+    if(isDueFilter){
+      // Show records where Next Action Date <= today and not closed
+      const nad=r.fields['Next Action Date']||'';
+      if(!nad) return false;
+      return nad<=today&&status!=='Closed'&&status!=='Inactive';
+    }
     if(expFilter==='all') return true;
     if(expFilter==='Replied') return status==='Replied';
     return sector===expFilter;
   }).sort((a,b)=>{
-    if(expFilter==='due'){
+    if(isDueFilter){
+      // Sort by oldest Next Action Date first
       const av=a.fields['Next Action Date']||'';
       const bv=b.fields['Next Action Date']||'';
       return av<bv?-1:av>bv?1:0;
@@ -351,13 +340,11 @@ function expFiltered(){
     return 0;
   });
 }
-
 function clearSelection(){
   selectedRows.clear();
   updateBulkBar();
   expRender();
 }
-
 function updateBulkBar(){
   const bar=document.getElementById('bulk-bar');
   const label=document.getElementById('bulk-label');
@@ -368,17 +355,14 @@ function updateBulkBar(){
     bar.classList.remove('visible');
   }
 }
-
 function toggleSelect(id, e){
   e.stopPropagation();
   if(selectedRows.has(id)) selectedRows.delete(id);
   else selectedRows.add(id);
   updateBulkBar();
-  // Update just the checkbox without full re-render
   const cb=document.getElementById('cb-'+id);
   if(cb) cb.checked=selectedRows.has(id);
 }
-
 function toggleSelectAll(e){
   const all=expFiltered().slice((expPage-1)*EXP_PAGE_SIZE,expPage*EXP_PAGE_SIZE);
   if(e.target.checked){
@@ -389,16 +373,14 @@ function toggleSelectAll(e){
   updateBulkBar();
   expRender();
 }
-
 async function bulkUpdate(status){
   if(selectedRows.size===0) return;
   const ids=[...selectedRows];
-  const today=new Date().toISOString().split('T')[0];
+  const today=todayStr();
   const plusSeven=new Date(Date.now()+7*24*60*60*1000).toISOString().split('T')[0];
-  
-  const fields={'Status':status,'Last Touched':today};
   const plus1=new Date(Date.now()+1*24*60*60*1000).toISOString().split('T')[0];
   const plus3=new Date(Date.now()+3*24*60*60*1000).toISOString().split('T')[0];
+  const fields={'Status':status,'Last Touched':today};
   if(status==='Sent'){
     fields['Next Action']='Follow up if no response';
     fields['Next Action Date']=plusSeven;
@@ -415,7 +397,6 @@ async function bulkUpdate(status){
     fields['Next Action']='';
     fields['Next Action Date']='';
   }
-
   toast(`Updating ${ids.length} records...`);
   let done=0;
   for(let i=0;i<ids.length;i++){
@@ -425,7 +406,6 @@ async function bulkUpdate(status){
         headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
         body:JSON.stringify({fields})
       });
-      // Update local record
       const r=expRecords.find(x=>x.id===ids[i]);
       if(r){
         r.fields['Status']=status;
@@ -442,8 +422,6 @@ async function bulkUpdate(status){
   updateBulkBar();
   expRender();
 }
-
-
 function genMsg(r){
   const fn=(r.fields['Name']||'').split(' ')[0];
   const co=getCompany(r)||'your company';
@@ -454,10 +432,9 @@ function genMsg(r){
   ];
   return opts[Math.floor(Math.random()*opts.length)];
 }
-
 async function markSent(recordId, name){
   try{
-    const today=new Date().toISOString().split('T')[0];
+    const today=todayStr();
     const plusSeven=new Date(Date.now()+7*24*60*60*1000).toISOString().split('T')[0];
     await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${recordId}`,{
       method:'PATCH',
@@ -465,19 +442,22 @@ async function markSent(recordId, name){
       body:JSON.stringify({fields:{
         'Status':'Sent',
         'Last Touched':today,
-        'Next Action':'Follow up',
+        'Next Action':'Follow up if no response',
         'Next Action Date':plusSeven
       }})
     });
-    // Update local record
     const r=expRecords.find(x=>x.id===recordId);
-    if(r){r.fields['Status']='Sent';r.fields['Last Touched']=today;}
+    if(r){
+      r.fields['Status']='Sent';
+      r.fields['Last Touched']=today;
+      r.fields['Next Action']='Follow up if no response';
+      r.fields['Next Action Date']=plusSeven;
+    }
     expandedRow=null;
     toast(`${name} marked sent`);
     expRender();
   }catch(e){toast('Error updating Airtable');}
 }
-
 function toggleRow(id){
   if(expandedRow===id){expandedRow=null;}
   else{
@@ -487,52 +467,45 @@ function toggleRow(id){
   }
   expRender();
 }
-
 function regenRowMsg(id){
   const r=expRecords.find(x=>x.id===id);
   if(r) rowMessages[id]=genMsg(r);
   expRender();
 }
-
 function copyRowMsg(id){
   if(navigator.clipboard) navigator.clipboard.writeText(rowMessages[id]);
   toast('Message copied');
 }
-
 function sortArrow(field){
   if(sortField!==field) return'<span style="color:#ddd;margin-left:4px">↕</span>';
   return sortDir==='desc'?'<span style="margin-left:4px">↓</span>':'<span style="margin-left:4px">↑</span>';
 }
-
 function expRender(){
   const all=expFiltered();
   const pages=Math.ceil(all.length/EXP_PAGE_SIZE);
   if(expPage>pages&&pages>0) expPage=1;
   const slice=all.slice((expPage-1)*EXP_PAGE_SIZE,expPage*EXP_PAGE_SIZE);
-
   const total=expRecords.length;
   const closed=expRecords.filter(r=>['Closed','Inactive'].includes(r.fields['Status']||'')).length;
-  document.getElementById('exp-label').textContent=`Showing ${all.length} of ${total} contacts (${closed} closed hidden)`;
-
-  // Init toggle button states
+  const isDueFilter=(expFilter==='due');
+  document.getElementById('exp-label').textContent=isDueFilter
+    ? `${all.length} contacts due for follow-up`
+    : `Showing ${all.length} of ${total} contacts (${closed} closed hidden)`;
   document.getElementById('toggle-closed').classList.toggle('on',hideClosed);
   document.getElementById('toggle-closed').textContent=hideClosed?'Hide closed':'Show closed';
   document.getElementById('toggle-recent').classList.toggle('on',hideRecent);
   document.getElementById('toggle-recent').textContent=hideRecent?'Hide recent':'Show recent';
-
   if(!slice.length){
-    document.getElementById('exp-table-wrap').innerHTML='<div class="empty">No contacts match.</div>';
+    document.getElementById('exp-table-wrap').innerHTML='<div class="empty">'+(isDueFilter?'No follow-ups due. You\'re all caught up!':'No contacts match.')+'</div>';
     document.getElementById('exp-pagination').innerHTML='';
     return;
   }
-
   let rows='';
   slice.forEach(r=>{
     const id=r.id;
     const name=r.fields['Name']||'';
     const role=r.fields['Role']||'';
     const sector=r.fields['Sector']||'';
-    const rawScore=r.fields['Score']||0;
     const effScore=effectiveScore(r);
     const status=r.fields['Status']||'';
     const warmth=r.fields['Warmth']||'Cold';
@@ -544,7 +517,7 @@ function expRender(){
     const isExpanded=expandedRow===id;
     const warmthClass=warmth==='Strong'?'warmth-strong':warmth==='Warm'?'warmth-warm':'warmth-cold';
     const scoreClass=effScore>=7?'score-high':effScore>=4?'score-mid':'score-low';
-
+    const isOverdue=nad&&nad<todayStr();
     rows+=`<tr class="data-row${isExpanded?' expanded':''}" onclick="toggleRow('${id}')">
       <td onclick="event.stopPropagation()" style="width:32px"><input type="checkbox" class="row-check" id="cb-${id}" ${selectedRows.has(id)?'checked':''} onclick="toggleSelect('${id}',event)"></td>
       <td class="td-name">${name}</td>
@@ -555,11 +528,10 @@ function expRender(){
       <td><span class="${warmthClass}">${warmth}</span></td>
       <td><span class="pill ${statusPill(status)}">${status||'—'}</span></td>
       <td style="font-size:12px;color:#888">${lastTouched||'—'}</td>
-      <td style="font-size:12px;color:#888">${nad||'—'}</td>
+      <td style="font-size:12px;color:${isOverdue?'#dc2626':'#888'};font-weight:${isOverdue?'500':'400'}">${nad||'—'}</td>
       <td style="font-size:12px;color:#555;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${nextAction}">${nextAction||'—'}</td>
       <td>${liUrl?`<a href="${liUrl}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;color:#2563eb">↗</a>`:'—'}</td>
     </tr>`;
-
     if(isExpanded){
       rows+=`<tr class="expand-row">
         <td colspan="12">
@@ -577,7 +549,6 @@ function expRender(){
       </tr>`;
     }
   });
-
   document.getElementById('exp-table-wrap').innerHTML=`<table>
     <thead><tr>
       <th style="width:32px"><input type="checkbox" class="row-check" id="cb-all" onclick="toggleSelectAll(event)"></th>
@@ -595,7 +566,6 @@ function expRender(){
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
-
   const pg=document.getElementById('exp-pagination');
   if(pages<=1){pg.innerHTML='';return;}
   let btns='';
@@ -606,7 +576,6 @@ function expRender(){
   }
   pg.innerHTML=`<span class="page-info">Page ${expPage} of ${pages}</span>${btns}`;
 }
-
 // UPSERT
 function matchSector(co, kws){
   return kws.some(k=>{
@@ -614,7 +583,6 @@ function matchSector(co, kws){
     return co.includes(k);
   });
 }
-
 function scoreConn(name, company, position){
   const co=(company||'').toLowerCase();
   const po=(position||'').toLowerCase();
@@ -630,7 +598,6 @@ function scoreConn(name, company, position){
   const sc=(sector?2:0)+(rm?2:0)+(sector&&rm?1:0);
   return{sector:displaySector,roleMatch:rm,skip:false,score:sc};
 }
-
 function parseLI(text){
   const lines=text.split('\n');
   const hi=lines.findIndex(l=>l.includes('First Name'));
@@ -643,7 +610,6 @@ function parseLI(text){
     url:(r['URL']||'').trim()
   }));
 }
-
 function parseCSV(text){
   const lines=text.split('\n');
   if(!lines.length)return[];
@@ -654,7 +620,6 @@ function parseCSV(text){
     return o;
   }).filter(r=>Object.values(r).some(v=>v));
 }
-
 function splitLine(line){
   const r=[];let c='';let q=false;
   for(let i=0;i<line.length;i++){
@@ -664,7 +629,6 @@ function splitLine(line){
   }
   r.push(c);return r;
 }
-
 async function buildAtMap(){
   toast('Loading Airtable records...');
   const all=await fetchAllPeople();
@@ -675,7 +639,6 @@ async function buildAtMap(){
   });
   return atPeopleMap;
 }
-
 document.getElementById('li-upload').addEventListener('change',async e=>{
   const file=e.target.files[0];if(!file)return;
   document.getElementById('upsert-status').textContent='Parsing CSV...';
@@ -752,7 +715,6 @@ document.getElementById('li-upload').addEventListener('change',async e=>{
   };
   reader.readAsText(file);
 });
-
 async function bulkWarmth(warmth){
   if(selectedRows.size===0) return;
   const ids=[...selectedRows];
@@ -776,7 +738,6 @@ async function bulkWarmth(warmth){
   updateBulkBar();
   expRender();
 }
-
 // Load on start
 loadExplorer();
 </script>
