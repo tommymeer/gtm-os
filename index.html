@@ -128,6 +128,7 @@ tr.expand-row td{padding:0;background:#f9f8f6}
       <button class="filter-btn" onclick="setExpFilter('Physical World',this)">Physical world</button>
       <button class="filter-btn" onclick="setExpFilter('Other',this)">Other</button>
       <button class="filter-btn" onclick="setExpFilter('Replied',this)">Replied</button>
+      <button class="filter-btn" onclick="setExpFilter('due',this)">Due today</button>
       <button class="toggle-btn" id="toggle-closed" onclick="toggleClosed()">Hide closed</button>
       <button class="toggle-btn" id="toggle-recent" onclick="toggleRecent()">Hide recent</button>
       <div class="spacer"></div>
@@ -333,11 +334,17 @@ function expFiltered(){
     if(expFilter==='Replied') return status==='Replied';
     return sector===expFilter;
   }).sort((a,b)=>{
+    if(expFilter==='due'){
+      const av=a.fields['Next Action Date']||'';
+      const bv=b.fields['Next Action Date']||'';
+      return av<bv?-1:av>bv?1:0;
+    }
     let av, bv;
     if(sortField==='score'){av=effectiveScore(a);bv=effectiveScore(b);}
     else if(sortField==='name'){av=(a.fields['Name']||'').toLowerCase();bv=(b.fields['Name']||'').toLowerCase();}
     else if(sortField==='status'){av=a.fields['Status']||'';bv=b.fields['Status']||'';}
     else if(sortField==='last'){av=a.fields['Last Touched']||'';bv=b.fields['Last Touched']||'';}
+    else if(sortField==='nad'){av=a.fields['Next Action Date']||'';bv=b.fields['Next Action Date']||'';}
     else{av=effectiveScore(a);bv=effectiveScore(b);}
     if(av<bv) return sortDir==='desc'?1:-1;
     if(av>bv) return sortDir==='desc'?-1:1;
@@ -436,6 +443,7 @@ async function bulkUpdate(status){
   expRender();
 }
 
+
 function genMsg(r){
   const fn=(r.fields['Name']||'').split(' ')[0];
   const co=getCompany(r)||'your company';
@@ -531,6 +539,8 @@ function expRender(){
     const lastTouched=r.fields['Last Touched']||'';
     const liUrl=getLiUrl(r);
     const company=getCompany(r);
+    const nad=r.fields['Next Action Date']||'';
+    const nextAction=r.fields['Next Action']||'';
     const isExpanded=expandedRow===id;
     const warmthClass=warmth==='Strong'?'warmth-strong':warmth==='Warm'?'warmth-warm':'warmth-cold';
     const scoreClass=effScore>=7?'score-high':effScore>=4?'score-mid':'score-low';
@@ -550,7 +560,7 @@ function expRender(){
 
     if(isExpanded){
       rows+=`<tr class="expand-row">
-        <td colspan="10">
+        <td colspan="12">
           <div class="expand-inner">
             <div class="msg-box" contenteditable="true" id="msg-${id}">${rowMessages[id]||''}</div>
             <div class="row-actions">
@@ -577,6 +587,8 @@ function expRender(){
       <th>Warmth</th>
       <th onclick="setSort('status')">Status${sortArrow('status')}</th>
       <th onclick="setSort('last')">Last touched${sortArrow('last')}</th>
+      <th onclick="setSort('nad')">Next action date${sortArrow('nad')}</th>
+      <th>Next action</th>
       <th>Link</th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -738,6 +750,30 @@ document.getElementById('li-upload').addEventListener('change',async e=>{
   };
   reader.readAsText(file);
 });
+
+async function bulkWarmth(warmth){
+  if(selectedRows.size===0) return;
+  const ids=[...selectedRows];
+  toast(`Setting ${ids.length} contacts to ${warmth}...`);
+  let done=0;
+  for(let i=0;i<ids.length;i++){
+    try{
+      await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${ids[i]}`,{
+        method:'PATCH',
+        headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+        body:JSON.stringify({fields:{'Warmth':warmth}})
+      });
+      const r=expRecords.find(x=>x.id===ids[i]);
+      if(r) r.fields['Warmth']=warmth;
+      done++;
+    }catch(e){console.error('Failed',ids[i]);}
+    if(i%5===4) await new Promise(r=>setTimeout(r,1000));
+  }
+  toast(`Updated ${done} contacts to ${warmth}`);
+  selectedRows.clear();
+  updateBulkBar();
+  expRender();
+}
 
 // Load on start
 loadExplorer();
