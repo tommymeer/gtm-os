@@ -105,6 +105,13 @@ tr.expand-row td{padding:0;background:#f9f8f6}
 .bulk-btn.danger{border-color:#f87171;color:#f87171}
 .bulk-btn.danger:hover{background:rgba(248,113,113,0.15)}
 .row-check{width:16px;height:16px;cursor:pointer;accent-color:#1a1a1a}
+.inline-field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.inline-label{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#aaa;font-weight:500}
+.inline-input{padding:5px 9px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:inherit;background:#fff;color:#1a1a1a;width:100%}
+.inline-input:focus{outline:none;border-color:#1a1a1a}
+.inline-input.saving{border-color:#fcd34d;background:#fefce8}
+.inline-input.saved{border-color:#a7f3d0;background:#f0fdf4}
+.inline-fields-row{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
@@ -533,15 +540,31 @@ function expRender(){
       <td>${liUrl?`<a href="${liUrl}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;color:#2563eb">↗</a>`:'—'}</td>
     </tr>`;
     if(isExpanded){
+      const safeNad=nad.replace(/"/g,'&quot;');
+      const safeNextAction=nextAction.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
       rows+=`<tr class="expand-row">
         <td colspan="12">
           <div class="expand-inner">
+            <div class="inline-fields-row" onclick="event.stopPropagation()">
+              <div class="inline-field" style="flex:1;min-width:160px">
+                <label class="inline-label">Next action</label>
+                <input class="inline-input" id="na-${id}" type="text" value="${safeNextAction}" placeholder="e.g. Follow up if no response"
+                  onblur="saveInlineField('${id}','Next Action',this)"
+                  onkeydown="if(event.key==='Enter'){this.blur()}">
+              </div>
+              <div class="inline-field" style="width:160px">
+                <label class="inline-label">Next action date</label>
+                <input class="inline-input" id="nad-${id}" type="date" value="${safeNad}"
+                  onchange="saveInlineField('${id}','Next Action Date',this)">
+              </div>
+            </div>
             <div class="msg-box" contenteditable="true" id="msg-${id}">${rowMessages[id]||''}</div>
             <div class="row-actions">
               <button class="btn primary" onclick="event.stopPropagation();markSent('${id}','${name.replace(/'/g,"\\'")}')">Mark sent</button>
               <button class="btn" onclick="event.stopPropagation();regenRowMsg('${id}')">New draft</button>
               <button class="btn" onclick="event.stopPropagation();copyRowMsg('${id}')">Copy</button>
               ${liUrl?`<a href="${liUrl}" target="_blank" class="btn" onclick="event.stopPropagation()">↗ LinkedIn</a>`:''}
+              <button class="btn danger" style="border-color:#fca5a5;color:#dc2626" onclick="event.stopPropagation();markClosed('${id}','${name.replace(/'/g,"\\'")}')">Mark closed</button>
               <button class="btn" onclick="event.stopPropagation();toggleRow('${id}')">Collapse</button>
             </div>
           </div>
@@ -737,6 +760,47 @@ async function bulkWarmth(warmth){
   selectedRows.clear();
   updateBulkBar();
   expRender();
+}
+async function saveInlineField(recordId, fieldName, el){
+  const val=el.value.trim();
+  el.classList.add('saving');
+  try{
+    await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${recordId}`,{
+      method:'PATCH',
+      headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{[fieldName]:val}})
+    });
+    const r=expRecords.find(x=>x.id===recordId);
+    if(r) r.fields[fieldName]=val;
+    el.classList.remove('saving');
+    el.classList.add('saved');
+    setTimeout(()=>el.classList.remove('saved'),1500);
+  }catch(e){
+    el.classList.remove('saving');
+    toast('Error saving — check connection');
+  }
+}
+async function markClosed(recordId, name){
+  try{
+    await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${recordId}`,{
+      method:'PATCH',
+      headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{
+        'Status':'Closed',
+        'Next Action':'',
+        'Next Action Date':''
+      }})
+    });
+    const r=expRecords.find(x=>x.id===recordId);
+    if(r){
+      r.fields['Status']='Closed';
+      r.fields['Next Action']='';
+      r.fields['Next Action Date']='';
+    }
+    expandedRow=null;
+    toast(`${name} closed`);
+    expRender();
+  }catch(e){toast('Error updating Airtable');}
 }
 // Load on start
 loadExplorer();
