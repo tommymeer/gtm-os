@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,6 +97,14 @@ tr.expand-row td{padding:0;background:#f9f8f6}
 .page-info{font-size:13px;color:#888}
 .search-input{min-width:180px;padding:6px 12px;border-radius:7px;border:1px solid #ddd;font-size:13px;background:#fff}
 .search-input:focus{outline:none;border-color:#999}
+.bulk-bar{display:none;align-items:center;gap:8px;padding:10px 14px;background:#1a1a1a;border-radius:8px;margin-bottom:10px;flex-wrap:wrap}
+.bulk-bar.visible{display:flex}
+.bulk-label{font-size:13px;color:#fff;margin-right:4px}
+.bulk-btn{padding:5px 13px;border-radius:99px;border:1px solid rgba(255,255,255,0.25);background:transparent;font-size:12px;cursor:pointer;color:#fff}
+.bulk-btn:hover{background:rgba(255,255,255,0.15)}
+.bulk-btn.danger{border-color:#f87171;color:#f87171}
+.bulk-btn.danger:hover{background:rgba(248,113,113,0.15)}
+.row-check{width:16px;height:16px;cursor:pointer;accent-color:#1a1a1a}
 @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
@@ -126,6 +135,15 @@ tr.expand-row td{padding:0;background:#f9f8f6}
     </div>
 
     <div class="queue-label" id="exp-label"></div>
+    <div class="bulk-bar" id="bulk-bar">
+      <span class="bulk-label" id="bulk-label">0 selected</span>
+      <button class="bulk-btn" onclick="bulkUpdate('Sent')">Mark sent</button>
+      <button class="bulk-btn" onclick="bulkUpdate('Replied')">Mark replied</button>
+      <button class="bulk-btn" onclick="bulkUpdate('Meeting Booked')">Mark meeting booked</button>
+      <button class="bulk-btn" onclick="bulkUpdate('Active Interview')">Mark interviewing</button>
+      <button class="bulk-btn danger" onclick="bulkUpdate('Closed')">Mark closed</button>
+      <button class="bulk-btn" onclick="clearSelection()" style="margin-left:auto">Clear</button>
+    </div>
     <div id="exp-table-wrap"><div class="loading">Loading from Airtable...</div></div>
     <div class="pagination" id="exp-pagination"></div>
   </div>
@@ -170,6 +188,7 @@ const TARGET_ROLES=['chief of staff','biz ops','bizops','business operations','s
 const SKIP_ROLES=['software engineer','senior software','staff software','principal engineer','data scientist','machine learning','ml engineer','data engineer','ux designer','ui designer','product designer','recruiter','talent acquisition','sourcer','talent coordinator','talent partner','talent advisor','accountant','lawyer','attorney','legal counsel','paralegal','sales development','sdr','bdr','account executive','account manager','customer success manager','customer success specialist','customer support','customer service','site reliability','devops','security engineer','investment banker','private equity','venture capital','physician','doctor','nurse','resident physician','medical student','law clerk','judicial','financial analyst','wealth advisor','wealth management'];
 
 let expRecords=[], expFilter='all', expPage=1, expandedRow=null, rowMessages={};
+let selectedRows=new Set();
 let hideClosed=true, hideRecent=true;
 let sortField='score', sortDir='desc';
 const EXP_PAGE_SIZE=50;
@@ -322,6 +341,97 @@ function expFiltered(){
   });
 }
 
+function clearSelection(){
+  selectedRows.clear();
+  updateBulkBar();
+  expRender();
+}
+
+function updateBulkBar(){
+  const bar=document.getElementById('bulk-bar');
+  const label=document.getElementById('bulk-label');
+  if(selectedRows.size>0){
+    bar.classList.add('visible');
+    label.textContent=`${selectedRows.size} selected`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function toggleSelect(id, e){
+  e.stopPropagation();
+  if(selectedRows.has(id)) selectedRows.delete(id);
+  else selectedRows.add(id);
+  updateBulkBar();
+  // Update just the checkbox without full re-render
+  const cb=document.getElementById('cb-'+id);
+  if(cb) cb.checked=selectedRows.has(id);
+}
+
+function toggleSelectAll(e){
+  const all=expFiltered().slice((expPage-1)*EXP_PAGE_SIZE,expPage*EXP_PAGE_SIZE);
+  if(e.target.checked){
+    all.forEach(r=>selectedRows.add(r.id));
+  } else {
+    all.forEach(r=>selectedRows.delete(r.id));
+  }
+  updateBulkBar();
+  expRender();
+}
+
+async function bulkUpdate(status){
+  if(selectedRows.size===0) return;
+  const ids=[...selectedRows];
+  const today=new Date().toISOString().split('T')[0];
+  const plusSeven=new Date(Date.now()+7*24*60*60*1000).toISOString().split('T')[0];
+  
+  const fields={'Status':status,'Last Touched':today};
+  const plus1=new Date(Date.now()+1*24*60*60*1000).toISOString().split('T')[0];
+  const plus3=new Date(Date.now()+3*24*60*60*1000).toISOString().split('T')[0];
+  if(status==='Sent'){
+    fields['Next Action']='Follow up if no response';
+    fields['Next Action Date']=plusSeven;
+  } else if(status==='Replied'){
+    fields['Next Action']='Schedule call';
+    fields['Next Action Date']=plus3;
+  } else if(status==='Meeting Booked'){
+    fields['Next Action']='Prep and confirm';
+    fields['Next Action Date']=plus1;
+  } else if(status==='Active Interview'){
+    fields['Next Action']='Prep for interview';
+    fields['Next Action Date']=plus1;
+  } else if(status==='Closed'){
+    fields['Next Action']='';
+    fields['Next Action Date']='';
+  }
+
+  toast(`Updating ${ids.length} records...`);
+  let done=0;
+  for(let i=0;i<ids.length;i++){
+    try{
+      await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_PEOPLE}/${ids[i]}`,{
+        method:'PATCH',
+        headers:{'Authorization':`Bearer ${AT_TOKEN}`,'Content-Type':'application/json'},
+        body:JSON.stringify({fields})
+      });
+      // Update local record
+      const r=expRecords.find(x=>x.id===ids[i]);
+      if(r){
+        r.fields['Status']=status;
+        if(fields['Last Touched']) r.fields['Last Touched']=today;
+        if(fields['Next Action']!==undefined) r.fields['Next Action']=fields['Next Action'];
+        if(fields['Next Action Date']!==undefined) r.fields['Next Action Date']=fields['Next Action Date'];
+      }
+      done++;
+    }catch(e){console.error('Failed to update',ids[i]);}
+    if(i%5===4) await new Promise(r=>setTimeout(r,1000));
+  }
+  toast(`Updated ${done} of ${ids.length} records`);
+  selectedRows.clear();
+  updateBulkBar();
+  expRender();
+}
+
 function genMsg(r){
   const fn=(r.fields['Name']||'').split(' ')[0];
   const co=getCompany(r)||'your company';
@@ -422,6 +532,7 @@ function expRender(){
     const scoreClass=effScore>=7?'score-high':effScore>=4?'score-mid':'score-low';
 
     rows+=`<tr class="data-row${isExpanded?' expanded':''}" onclick="toggleRow('${id}')">
+      <td onclick="event.stopPropagation()" style="width:32px"><input type="checkbox" class="row-check" id="cb-${id}" ${selectedRows.has(id)?'checked':''} onclick="toggleSelect('${id}',event)"></td>
       <td class="td-name">${name}</td>
       <td class="td-company">${company||'—'}</td>
       <td class="td-role" title="${role}">${role||'—'}</td>
@@ -435,7 +546,7 @@ function expRender(){
 
     if(isExpanded){
       rows+=`<tr class="expand-row">
-        <td colspan="9">
+        <td colspan="10">
           <div class="expand-inner">
             <div class="msg-box" contenteditable="true" id="msg-${id}">${rowMessages[id]||''}</div>
             <div class="row-actions">
@@ -453,6 +564,7 @@ function expRender(){
 
   document.getElementById('exp-table-wrap').innerHTML=`<table>
     <thead><tr>
+      <th style="width:32px"><input type="checkbox" class="row-check" id="cb-all" onclick="toggleSelectAll(event)"></th>
       <th onclick="setSort('name')">Name${sortArrow('name')}</th>
       <th>Company</th>
       <th>Role</th>
