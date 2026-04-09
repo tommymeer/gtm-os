@@ -142,6 +142,10 @@ tr.expand-row td{padding:0;background:#f9f8f6}
       <button class="bulk-btn" onclick="bulkUpdate('Meeting Booked')">Mark meeting booked</button>
       <button class="bulk-btn" onclick="bulkUpdate('Active Interview')">Mark interviewing</button>
       <button class="bulk-btn danger" onclick="bulkUpdate('Closed')">Mark closed</button>
+      <span style="color:rgba(255,255,255,0.3);margin:0 4px">|</span>
+      <button class="bulk-btn" onclick="bulkWarmth('Cold')">Set cold</button>
+      <button class="bulk-btn" onclick="bulkWarmth('Warm')">Set warm</button>
+      <button class="bulk-btn" onclick="bulkWarmth('Strong')">Set strong</button>
       <button class="bulk-btn" onclick="clearSelection()" style="margin-left:auto">Clear</button>
     </div>
     <div id="exp-table-wrap"><div class="loading">Loading from Airtable...</div></div>
